@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+    <div class="flex items-center px-4 py-4 justify-between max-w-2xl mx-auto w-full">
+        <div class="flex size-10 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+            <span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+        </div>
+        <h1 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center">Liga-Bestenliste</h1>
+        <div class="flex size-10 items-center justify-center">
+            <span class="material-symbols-outlined text-primary">emoji_events</span>
+        </div>
+    </div>
+    <!-- Tabs -->
+    <div class="flex px-4 justify-between max-w-2xl mx-auto w-full">
+        <a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-3 pt-2 flex-1" href="#">
+            <p class="text-sm font-bold tracking-wide">Wöchentlich</p>
+        </a>
+        <a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 flex-1" href="#">
+            <p class="text-sm font-medium tracking-wide">Monatlich</p>
+        </a>
+        <a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 flex-1" href="#">
+            <p class="text-sm font-medium tracking-wide">Freunde</p>
+        </a>
+    </div>
+</header>
+<main class="flex-1 overflow-y-auto pb-24">
+    <!-- Podium Section -->
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <div class="flex items-end justify-center gap-2 mb-8 h-64">
+            <!-- 2nd Place -->
+            <div class="flex flex-col items-center flex-1">
+                <div class="relative mb-3">
+                    <div class="size-16 rounded-full border-4 border-slate-300 bg-center bg-cover" data-alt="Portrait of a female user runner up" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCktXIxkRDvTfuAdRBuSPhI9_aEHx3Iov3teaqnlvHyqlZqMYO-JwWUnjv-t_E3Ux-I_r75w_9Bp697Fe0uQol--j5NJTXb1-eDqIgOl4N8ixxt9fT01SFDdsoyOS4l0uD8PyR2sSFF8n1ykzmk3BoXELTyELZLLrkQzvMRifSi9OqW6hlwjQtOZhHeM2NZLWUnrtB3ep9EIsGjLjRrrvLcXyOuErgiH2Ulemqpbc5wy2XsZJIU-c9dDdf6Se_IrCSXG9Qrd0gXTeU')"></div>
+                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-300 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded-full">2</div>
+                </div>
+                <p class="font-bold text-sm mb-1">Sarah</p>
+                <p class="text-xs text-primary font-medium">2,450 XP</p>
+                <div class="w-full bg-primary/10 rounded-t-lg h-24 mt-4"></div>
+            </div>
+            <!-- 1st Place -->
+            <div class="flex flex-col items-center flex-1">
+                <span class="material-symbols-outlined text-yellow-400 mb-1 animate-bounce">workspace_premium</span>
+                <div class="relative mb-3">
+                    <div class="size-20 rounded-full border-4 border-primary bg-center bg-cover shadow-[0_0_20px_rgba(19,236,91,0.3)]" data-alt="Portrait of the winner user" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDAQVa6WLmgaCUZWIGbHxvYemQE88LLyGcfVzP5KE2K3SFFqfKirJeta6OT6bi6-Gh1eto1kJTGZbBT_yBNnB3207cDWW5ex_TwqZBIlTDQO1jLWTHsshBwfNMfZQER2cbXdFIpxwIYm2YS4fxZ7HFNo9MO5nu8Mp7DF7Ulr8P2ksG1F_h2PIWSXcRExtZsTH7LD4uLR9Ay-o_gGECGZ2xm-6P3iudjmCU_7wyTA2FjkgcMzLBIGodmhlL5kub900B2G38rVKDIHB4')"></div>
+                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-background-dark text-xs font-bold px-3 py-0.5 rounded-full">1</div>
+                </div>
+                <p class="font-bold text-base mb-1">James</p>
+                <p class="text-sm text-primary font-bold">2,890 XP</p>
+                <div class="w-full bg-primary/20 rounded-t-lg h-36 mt-4"></div>
+            </div>
+            <!-- 3rd Place -->
+            <div class="flex flex-col items-center flex-1">
+                <div class="relative mb-3">
+                    <div class="size-16 rounded-full border-4 border-orange-400 bg-center bg-cover" data-alt="Portrait of the third place user" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDEEIgjj6v5oBo57il_6TyvFRSzo9ZPksMdvOFPpV70GfZg4QShWHikCKEw417qt0q9oQKnNv_FB5ejVM_JXPpH9MJoh_iBngarlzokI4imbl_0RUOQzcPRPurF6T7dzU5X6wAZ_x9eZ6Oyw3rs7SIVCRzoVkKvB5tsFSSFpALeUlFUPo0Q6RHf8DkXjLtEfg6PQCTBUgHfRkyldLJ51CgJftYUh34kdrBCH0kXbXJRSX5H2UW62EhGkN7b30r84RkHjTDe4W44mlY')"></div>
+                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-orange-400 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded-full">3</div>
+                </div>
+                <p class="font-bold text-sm mb-1">Mila</p>
+                <p class="text-xs text-primary font-medium">2,120 XP</p>
+                <div class="w-full bg-primary/5 rounded-t-lg h-16 mt-4"></div>
+            </div>
+        </div>
+        <!-- List Section -->
+        <div class="space-y-3">
+            <!-- User 4 -->
+            <div class="flex items-center p-4 bg-background-light dark:bg-slate-900/40 rounded-xl border border-primary/5">
+                <span class="w-6 text-sm font-bold text-slate-500">4</span>
+                <div class="size-10 rounded-full bg-center bg-cover mx-3" data-alt="User profile avatar small" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCo7S5aOdLYqO91mU1pFnKM0ZvDgA3FVnVJ94il0EU3Al2yAZlJxeeKFUcKo_amPkEzCN4iOy56nTeKmKMVNceCCOXGtA_pKCV8JXk-HO5yc2N5zTzncr_oX1YdhOg7yALaB03h8omoACqxgIBgSS1fc7xatDl2wQKr6Ta84L95ot6iEMbv7tRwBqQkgasKCJINfkEJ1L_3qEqecehHbUAoWOHkXvh9FXvOO1ENZ2o0b2sS8ES1ICgVa52KwEJpyDOyeFducvJDqDI')"></div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm">Elena</p>
+                    <p class="text-xs text-slate-500">14 Tage Serie</p>
+                </div>
+                <p class="font-bold text-sm">1,980 XP</p>
+            </div>
+            <!-- Current User: Alex (Highlighted) -->
+            <div class="flex items-center p-4 bg-primary dark:bg-primary rounded-xl shadow-lg shadow-primary/20 transform scale-[1.02]">
+                <span class="w-6 text-sm font-bold text-background-dark">5</span>
+                <div class="size-10 rounded-full border-2 border-background-dark bg-center bg-cover mx-3" data-alt="Alex's profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDtvUpeMmXjukMbxe6ltaRxVBQ6q9-rgjPhwhajviSL8jxF-juNEkSrKzEdHERahq3bMkOj3Tq9-ZQM9EOkEy-sMJm5b57T5yI6LR21uq2OwL9GdQy0RmNtynUGBi1cer-_kwGdVeXhnatASrbrf-mjEanL43HwraWzDtBV8DKvfEWf6fLM76rKZE116xX8SQwQ6mmI-ZgiKlodnZxeyGPUDgP8zjnqQ7NyXasemmu7WzXwBG1reS8BFPq59YJU14Lbo27F0SdiYt4')"></div>
+                <div class="flex-1">
+                    <p class="font-bold text-sm text-background-dark">Alex (Du)</p>
+                    <p class="text-xs text-background-dark/80 font-medium">8 Tage Serie</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <p class="font-extrabold text-sm text-background-dark">1,845 XP</p>
+                    <p class="text-[10px] font-bold text-background-dark/60 uppercase">WEITER SO!</p>
+                </div>
+            </div>
+            <!-- User 6 -->
+            <div class="flex items-center p-4 bg-background-light dark:bg-slate-900/40 rounded-xl border border-primary/5 opacity-80">
+                <span class="w-6 text-sm font-bold text-slate-500">6</span>
+                <div class="size-10 rounded-full bg-center bg-cover mx-3" data-alt="User profile avatar small" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAc2cPWMCpiQpX8psmZq7kOUubD7Hbd2savwoo0muX3rT9MkTFdJYE392gza80RQJo5uTviWCfKvCGyAmFBnlbmqnJmkCuRSzijncx5T0g3PE3mwRG-KBMarNy66UchJYGsQ-P6Xm2h3beaOaThBJ8XWJVrwu3nkyIOI_Kt0RYyZZ74nLS3NyAiQAZ2x-TmLrlgXeXigU_C3gNbLwRPKbZVznvOK551fhnU7nlJfUnvh3myJuI0xteGC1E6npoIXz8JtjsF3xAJBl0')"></div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm text-slate-400">David</p>
+                    <p class="text-xs text-slate-500">5 Tage Serie</p>
+                </div>
+                <p class="font-bold text-sm text-slate-400">1,620 XP</p>
+            </div>
+            <!-- User 7 -->
+            <div class="flex items-center p-4 bg-background-light dark:bg-slate-900/40 rounded-xl border border-primary/5 opacity-80">
+                <span class="w-6 text-sm font-bold text-slate-500">7</span>
+                <div class="size-10 rounded-full bg-center bg-cover mx-3" data-alt="User profile avatar small" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAT3uENyxaOJ1zIhVXIWE2Es5TVKOHRHHCSNHX8oc2u39rGrj-ZfVjyS4wcUHrrMN_XvFDunILGj-28YYSTLfqWEvrOZfsveDyOuFYKD4U6x8Sa85qPB87xugf2Bp9vqCMZ-REMOCf_1Tl1aMh84MHSDmM7WIcTs8WGqxPXMRLj5y0C_yTJGaZhRZDnRhEkqkjWxsGx2JIETUQRxDFgWkwu4lEabxBkO8_GgDZTMnbn58vOJuzYzE3f4oEmFTjVG2U2jPDtst9BvT4')"></div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm text-slate-400">Sophia</p>
+                    <p class="text-xs text-slate-500">21 Tage Serie</p>
+                </div>
+                <p class="font-bold text-sm text-slate-400">1,410 XP</p>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-primary/10 px-4 pb-6 pt-2">
+    <div class="max-w-2xl mx-auto flex justify-between items-center">
+        <a class="flex flex-1 flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+            <span class="material-symbols-outlined text-[24px]">school</span>
+            <p class="text-[10px] font-medium">Lernen</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+            <span class="material-symbols-outlined text-[24px]">history</span>
+            <p class="text-[10px] font-medium">Wiederholen</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center gap-1 text-primary" href="#">
+            <span class="material-symbols-outlined text-[24px] fill-1" style="font-variation-settings: 'FILL' 1">leaderboard</span>
+            <p class="text-[10px] font-bold">Ligen</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+            <span class="material-symbols-outlined text-[24px]">person</span>
+            <p class="text-[10px] font-medium">Profil</p>
+        </a>
+    </div>
+</nav>
+</body></html>

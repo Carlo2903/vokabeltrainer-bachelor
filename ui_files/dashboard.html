@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dashboard &amp; Languages - Vocabulary Trainer</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.symbols.outlined/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6366f1",
+                        "accent": "#f43f5e",
+                        "success": "#10b981",
+                        "background-dark": "#0f172a",
+                        "surface-dark": "#1e293b",
+                        "surface-darker": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+            background-color: #0f172a;
+        }
+    </style>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 antialiased selection:bg-primary selection:text-white overflow-hidden h-screen flex flex-col relative">
+<div class="h-14 w-full shrink-0"></div>
+<main class="flex-1 overflow-y-auto no-scrollbar px-6 pb-28">
+    <header class="flex justify-between items-center mb-8 pt-2">
+        <div>
+            <h2 class="text-sm font-light text-slate-400 mb-1">Good evening,</h2>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Alex.</h1>
+        </div>
+        <div class="relative group cursor-pointer">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-full blur-md opacity-40 group-hover:opacity-80 transition duration-300"></div>
+            <div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-slate-700 bg-slate-800 flex items-center justify-center">
+                <img alt="User Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1XHdHtittomle4bLYB5Vmin5fTl471VSaLl-eiy4DOnJ4i8FMNLRUs2TFfZrapTcFtZhotm2AYrUm20p66EZ8Li6nGJi1XxI_nJDVhjHE4vIgzerNQFs2Yz7IY3V5QClkCuV7ul9IvUNhVREmgsyhAXZIG6bOBsR9J3Gnm2QpKepc1MDKVy-Ar7kATlokjca1SG1ElV9nJwdcm9baPXB0li9PTETqk5gogWcx8C4zpq2bmBXc94dalFRLLAnbL4nY2K_9H9yt5Lg"/>
+            </div>
+        </div>
+    </header>
+    <div class="grid grid-cols-2 gap-4 mb-10">
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-slate-700/50 relative overflow-hidden">
+            <div class="absolute -top-1 -right-1 opacity-20 transform rotate-12">
+                <span class="material-icons-round text-5xl text-accent">local_fire_department</span>
+            </div>
+            <p class="text-[10px] text-accent font-bold uppercase tracking-widest mb-1">Daily Streak</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-bold text-white">12</span>
+                <span class="text-xs text-slate-400 font-medium">days</span>
+            </div>
+        </div>
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-slate-700/50 relative overflow-hidden">
+            <div class="absolute -top-1 -right-1 opacity-20 transform rotate-12">
+                <span class="material-icons-round text-5xl text-primary">auto_awesome</span>
+            </div>
+            <p class="text-[10px] text-primary font-bold uppercase tracking-widest mb-1">Words Learnt</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-bold text-white">843</span>
+                <span class="text-xs text-slate-400 font-medium">total</span>
+            </div>
+        </div>
+    </div>
+    <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-semibold tracking-tight">Active Courses</h3>
+        <button class="text-primary text-sm font-semibold hover:opacity-80">View History</button>
+    </div>
+    <div class="relative group mb-8">
+        <div class="absolute -inset-1 bg-gradient-to-br from-primary/30 to-accent/30 rounded-[2rem] blur-xl opacity-20 group-hover:opacity-40 transition duration-500"></div>
+        <div class="relative bg-slate-800 border border-slate-700/80 rounded-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="bg-slate-700 p-2 rounded-xl border border-slate-600">
+                        <span class="text-xl">🇩🇪</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white leading-tight">German</h4>
+                        <p class="text-xs text-slate-400 font-medium">Intermediate B1 • 1,240 Words</p>
+                    </div>
+                </div>
+                <button class="w-10 h-10 rounded-full bg-slate-900/50 flex items-center justify-center border border-slate-700 text-slate-400">
+                    <span class="material-icons-round text-lg">settings</span>
+                </button>
+            </div>
+            <div class="space-y-4 mb-8">
+                <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1">
+                    <span>Block Progress</span>
+                    <span class="text-primary">68% Total</span>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="space-y-2">
+                        <div class="h-20 bg-slate-900/80 rounded-xl relative overflow-hidden flex flex-col justify-end p-1">
+                            <div class="w-full bg-slate-600/40 rounded-lg" style="height: 35%;"></div>
+                        </div>
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 font-medium uppercase">Learning</span>
+                            <span class="text-sm font-bold text-white">12</span>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="h-20 bg-slate-900/80 rounded-xl relative overflow-hidden flex flex-col justify-end p-1">
+                            <div class="w-full bg-primary/60 rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)]" style="height: 60%;"></div>
+                        </div>
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 font-medium uppercase">Review</span>
+                            <span class="text-sm font-bold text-primary">45</span>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="h-20 bg-slate-900/80 rounded-xl relative overflow-hidden flex flex-col justify-end p-1">
+                            <div class="w-full bg-success rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.4)]" style="height: 85%;"></div>
+                        </div>
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 font-medium uppercase">Mastered</span>
+                            <span class="text-sm font-bold text-success">120</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="w-full bg-primary hover:bg-indigo-500 text-white font-bold text-lg py-4.5 rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-[0.97] flex items-center justify-center gap-3 py-4">
+                <span class="material-icons-round">bolt</span>
+                Start Training Session
+            </button>
+        </div>
+    </div>
+    <div class="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/50 mb-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-2xl border border-slate-700">
+                🇯🇵
+            </div>
+            <div>
+                <h4 class="text-base font-bold text-white">Japanese</h4>
+                <p class="text-xs text-slate-500 font-medium">N5 Beginner • 42 Words</p>
+            </div>
+        </div>
+        <div class="relative w-12 h-12 flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+                <circle class="text-slate-700" cx="18" cy="18" fill="none" r="16" stroke="currentColor" stroke-width="3"></circle>
+                <circle class="text-accent" cx="18" cy="18" fill="none" r="16" stroke="currentColor" stroke-dasharray="30, 100" stroke-linecap="round" stroke-width="3"></circle>
+            </svg>
+            <span class="absolute text-[10px] font-bold text-white">30%</span>
+        </div>
+    </div>
+    <button class="w-full border-2 border-dashed border-slate-700 hover:border-primary/50 bg-slate-800/20 rounded-2xl p-5 flex flex-col items-center justify-center gap-2 group transition-all">
+        <div class="w-10 h-10 rounded-full bg-slate-800 group-hover:bg-primary/20 flex items-center justify-center transition-colors border border-slate-700">
+            <span class="material-icons-round text-slate-500 group-hover:text-primary">add</span>
+        </div>
+        <span class="text-xs font-bold text-slate-500 group-hover:text-primary uppercase tracking-widest">Add New Language</span>
+    </button>
+</main>
+<nav class="fixed bottom-0 w-full z-50">
+    <div class="h-10 w-full bg-gradient-to-b from-transparent to-background-dark"></div>
+    <div class="bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/50 pb-9 pt-3 px-8">
+        <ul class="flex justify-between items-center">
+            <li>
+                <a class="flex flex-col items-center gap-1.5 text-primary" href="#">
+                    <span class="material-icons-round text-2xl">grid_view</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">Learn</span>
+                </a>
+            </li>
+            <li>
+                <a class="flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors" href="#">
+                    <span class="material-icons-round text-2xl">translate</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">Dictionary</span>
+                </a>
+            </li>
+            <li>
+                <a class="flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors" href="#">
+                    <span class="material-icons-round text-2xl">analytics</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">Stats</span>
+                </a>
+            </li>
+            <li>
+                <a class="flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors" href="#">
+                    <span class="material-icons-round text-2xl">account_circle</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+</body></html>

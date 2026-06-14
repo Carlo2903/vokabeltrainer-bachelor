@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <title>Vokabel-Erfolge</title>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden">
+    <!-- Header -->
+    <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800/50 backdrop-blur-md">
+        <div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center justify-start">
+            <span class="material-symbols-outlined cursor-pointer">arrow_back</span>
+        </div>
+        <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center">Erfolge</h2>
+        <div class="flex w-12 items-center justify-end">
+            <button class="flex items-center justify-center rounded-xl h-12 bg-transparent text-slate-900 dark:text-slate-100">
+                <span class="material-symbols-outlined">share</span>
+            </button>
+        </div>
+    </div>
+    <!-- Profile Section -->
+    <div class="flex p-6">
+        <div class="flex w-full flex-col gap-4 items-center">
+            <div class="flex gap-4 flex-col items-center">
+                <div class="relative">
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32 border-4 border-primary/30" data-alt="User profile picture of a young man smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuATtHTCmNjIhkaZ85x2-nXl56WteffSomAgzopmhceZtLVESb46Nte3Q2lsjW8YN7vLIOgsYeJlZwIXS40rhHyI1I7vw-4kvn3MEGpFhjIH5SqdHsYs8cH2HK_rMnuESRmXMzWYfFYEDbhhptqtfHB07Jh0-UYkUmTbLiszHiYbjncRC4WFzXvKOqLorqW-JbnBYjF_TAPS_PRKuetN49hccKbW5qq3DwkjQ3v1KDGm9wICBDi9CPU_tld7zktTd8NYb7efVBJQghg");'>
+                    </div>
+                    <div class="absolute bottom-0 right-0 bg-primary text-background-dark text-xs font-bold px-2 py-1 rounded-full border-2 border-background-dark">
+                        LVL 15
+                    </div>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <p class="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight tracking-tight text-center">Alex Johnson</p>
+                    <p class="text-primary font-medium text-sm leading-normal text-center mt-1 uppercase tracking-wider">VOKABEL-ENTDECKER</p>
+                    <div class="w-48 bg-slate-200 dark:bg-slate-800 h-2 rounded-full mt-4 overflow-hidden">
+                        <div class="bg-primary h-full w-[65%] rounded-full"></div>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-2">1,250 XP bis Level 16</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Stats Row -->
+    <div class="flex flex-wrap gap-3 px-4 py-3">
+        <div class="flex min-w-[100px] flex-1 basis-[fit-content] flex-col gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4 items-center text-center">
+            <p class="text-primary text-2xl font-bold leading-tight">42</p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-tighter">ABZEICHEN</p>
+        </div>
+        <div class="flex min-w-[100px] flex-1 basis-[fit-content] flex-col gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4 items-center text-center">
+            <p class="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight">15</p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-tighter">AUSZEICHNUNGEN</p>
+        </div>
+        <div class="flex min-w-[100px] flex-1 basis-[fit-content] flex-col gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4 items-center text-center">
+            <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-orange-500 text-xl fill-1">local_fire_department</span>
+                <p class="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight">7</p>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-tighter">SERIE</p>
+        </div>
+    </div>
+    <!-- Badges Grid Section -->
+    <div class="px-4 pt-6 pb-24">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Deine Sammlung</h3>
+            <span class="text-primary text-sm font-semibold">Alle ansehen</span>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+            <!-- Unlocked Badge 1 -->
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 flex items-center justify-center border-2 border-primary shadow-[0_0_15px_rgba(19,236,91,0.2)]">
+                    <span class="material-symbols-outlined text-4xl text-primary fill-1">military_tech</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-100">100 Wörter Meister</p>
+            </div>
+            <!-- Unlocked Badge 2 -->
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-orange-400/40 to-orange-400/10 flex items-center justify-center border-2 border-orange-400 shadow-[0_0_15px_rgba(251,146,60,0.2)]">
+                    <span class="material-symbols-outlined text-4xl text-orange-400 fill-1">local_fire_department</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-100">7 Tage Serie</p>
+            </div>
+            <!-- Unlocked Badge 3 -->
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400/40 to-blue-400/10 flex items-center justify-center border-2 border-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.2)]">
+                    <span class="material-symbols-outlined text-4xl text-blue-400 fill-1">language</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-100">Sprachen-Genie</p>
+            </div>
+            <!-- Locked Badge 1 -->
+            <div class="flex flex-col items-center gap-2 opacity-40 grayscale">
+                <div class="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-2 border-slate-300 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-4xl text-slate-500">menu_book</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-400">Eifriger Leser</p>
+            </div>
+            <!-- Locked Badge 2 -->
+            <div class="flex flex-col items-center gap-2 opacity-40 grayscale">
+                <div class="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-2 border-slate-300 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-4xl text-slate-500">bolt</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-400">Schneller Lerner</p>
+            </div>
+            <!-- Locked Badge 3 -->
+            <div class="flex flex-col items-center gap-2 opacity-40 grayscale">
+                <div class="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-2 border-slate-300 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-4xl text-slate-500">psychology</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-400">Lexikon-Experte</p>
+            </div>
+            <!-- Locked Badge 4 -->
+            <div class="flex flex-col items-center gap-2 opacity-40 grayscale">
+                <div class="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-2 border-slate-300 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-4xl text-slate-500">groups</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-400">Kontaktfreudig</p>
+            </div>
+            <!-- Locked Badge 5 -->
+            <div class="flex flex-col items-center gap-2 opacity-40 grayscale">
+                <div class="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-2 border-slate-300 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-4xl text-slate-500">workspace_premium</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-400">Top 1% Club</p>
+            </div>
+            <!-- Locked Badge 6 -->
+            <div class="flex flex-col items-center gap-2 opacity-40 grayscale">
+                <div class="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-2 border-slate-300 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-4xl text-slate-500">history_edu</span>
+                </div>
+                <p class="text-xs font-bold text-center dark:text-slate-400">Etymologie-König</p>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 z-20 flex gap-2 border-t border-slate-200 dark:border-slate-800 bg-background-light dark:bg-[#0c1a11] px-4 pb-6 pt-2">
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500" href="#">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">home</span>
+            </div>
+            <p class="text-[10px] font-medium leading-normal tracking-wide">Home</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500" href="#">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">book_4</span>
+            </div>
+            <p class="text-[10px] font-medium leading-normal tracking-wide">Lernen</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined fill-1">emoji_events</span>
+            </div>
+            <p class="text-[10px] font-medium leading-normal tracking-wide">Erfolge</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500" href="#">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+            <p class="text-[10px] font-medium leading-normal tracking-wide">Profil</p>
+        </a>
+    </div>
+</div>
+</body></html>

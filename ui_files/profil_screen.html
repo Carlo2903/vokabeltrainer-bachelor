@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile Info</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38bdf8",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden max-w-md mx-auto border-x border-slate-200 dark:border-slate-800/50">
+<div class="flex items-center p-4 pb-2 justify-between sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md z-10 border-b border-slate-200 dark:border-slate-800">
+<button class="flex size-12 shrink-0 items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Profile</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex items-center justify-center size-12 text-slate-900 dark:text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">settings</span>
+</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto pb-24">
+<div class="flex p-6 @container justify-center">
+<div class="flex w-full flex-col gap-6 items-center">
+<div class="flex gap-4 flex-col items-center relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 shadow-lg ring-4 ring-primary/20 dark:ring-primary/20 relative" data-alt="Portrait of a user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHYKIVsq0ggvGSRwHAnhoV8oBqFfvLku8928GUqYXFktUge05vwBHM_G-RkKfm_hB-xE7A3dbQv0mDESJLDv6wc5jHsjuzJqxpWoOh9v7yTXelvj2xr5nxXNg12VkD5w7yA_VtZuLi8FVa71eirPO7Aiq89vCIIiNhd-KR44oOzdy-KnA3ksaXpfm37yPQ139rFhtuIyQqI8IeJQUB38C6zIq1l0ibE4BnesbzxQgET1UHcm0iI-Rd-klyPNG5OVyzUlHWIi8tE1I");'>
+<div class="absolute bottom-0 right-0 bg-primary size-8 rounded-full flex items-center justify-center border-2 border-background-light dark:border-background-dark text-background-dark">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-[24px] font-bold leading-tight tracking-[-0.015em] text-center mb-1">Alex Johnson</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal text-center">alex.johnson@email.com</p>
+</div>
+</div>
+<div class="flex gap-3 w-full px-4">
+<button class="flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-primary text-slate-900 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors shadow-md shadow-primary/20">
+<span class="truncate">Edit Profile</span>
+</button>
+</div>
+</div>
+</div>
+<div class="px-6 py-2">
+<h3 class="text-xl font-bold leading-tight tracking-[-0.015em] text-left mb-4">Your Statistics</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-2 rounded-xl p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-1">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">school</span>
+<p class="text-xs font-semibold uppercase tracking-wider">Words Learned</p>
+</div>
+<p class="tracking-tight text-3xl font-bold leading-tight">1,432</p>
+<div class="flex items-center gap-1 mt-1 text-primary text-sm font-medium">
+<span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span>
+<span>+12% this week</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-1">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">local_fire_department</span>
+<p class="text-xs font-semibold uppercase tracking-wider">Current Streak</p>
+</div>
+<p class="tracking-tight text-3xl font-bold leading-tight">42<span class="text-lg font-medium text-slate-500 dark:text-slate-400 ml-1">Days</span></p>
+<div class="flex items-center gap-1 mt-1 text-primary text-sm font-medium">
+<span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span>
+<span>+5% record</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm col-span-2">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">public</span>
+<p class="text-xs font-semibold uppercase tracking-wider">Global Rank</p>
+</div>
+<div class="text-rose-500 text-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 16px;">trending_down</span>
+<span>-3 pos</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<p class="tracking-tight text-4xl font-bold leading-tight text-primary">#1,204</p>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">out of 50k users</p>
+</div>
+</div>
+</div>
+</div>
+<div class="px-6 py-8 mt-4">
+<button class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl h-14 bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-base font-bold leading-normal border border-rose-500/20 hover:bg-rose-500/30 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">logout</span>
+<span>Log Out</span>
+</button>
+</div>
+</div>
+<div class="fixed bottom-0 w-full max-w-md bg-background-light dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 pb-safe z-20">
+<div class="flex gap-2 px-4 pb-4 pt-3">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px;">home</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-[0.015em] uppercase">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px;">menu_book</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-[0.015em] uppercase">Learn</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px;">history</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-[0.015em] uppercase">Review</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center relative">
+<span class="material-symbols-outlined" style="font-size: 24px; font-variation-settings: 'FILL' 1;">person</span>
+<div class="absolute -bottom-2 w-1 h-1 rounded-full bg-primary"></div>
+</div>
+<p class="text-[10px] font-bold leading-normal tracking-[0.015em] uppercase mt-1">Profile</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

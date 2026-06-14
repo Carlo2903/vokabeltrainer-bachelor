@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Start Training Session</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00f2ff", // Energetic Neon Blue
+                        "secondary": "#13ec5b", // Energetic Neon Green
+                        "background-dark": "#0a0c10",
+                        "surface-dark": "#161b22",
+                        "neutral-800": "#1c2128",
+                        "neutral-700": "#30363d",
+                        "neutral-400": "#8b949e",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #00f2ff;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+            border: 3px solid #0a0c10;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #30363d;
+            border-radius: 2px;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-white antialiased selection:bg-primary selection:text-background-dark min-h-screen flex justify-center">
+<div class="w-full max-w-md h-screen relative flex flex-col overflow-hidden bg-background-dark">
+    <header class="px-6 pt-12 pb-4 flex items-center justify-between z-10">
+        <button class="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors">
+            <span class="material-icons text-2xl text-neutral-400">close</span>
+        </button>
+        <h1 class="text-lg font-medium tracking-wide text-neutral-400">Configuration</h1>
+        <button class="p-2 -mr-2 rounded-full hover:bg-white/10 transition-colors">
+            <span class="material-icons text-2xl text-neutral-400">help_outline</span>
+        </button>
+    </header>
+    <main class="flex-1 px-6 pb-32 overflow-y-auto no-scrollbar flex flex-col gap-8">
+        <div class="mt-4">
+            <h2 class="text-4xl font-bold leading-tight mb-2 tracking-tight">Start Training<span class="text-secondary">.</span></h2>
+            <p class="text-neutral-400">Customize your daily repetition session.</p>
+        </div>
+        <div class="bg-surface-dark p-5 rounded-2xl shadow-xl border border-neutral-700/50 flex items-center justify-between">
+            <div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Master Pile</div>
+                <div class="text-2xl font-bold text-white">142 Words</div>
+                <div class="text-sm text-neutral-400 mt-1">Ready for review</div>
+            </div>
+            <div class="h-12 w-12 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+                <span class="material-icons text-secondary">inventory_2</span>
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold mb-4 ml-1 text-neutral-300">Translation Direction</label>
+            <div class="grid grid-cols-3 gap-3">
+                <button class="relative group">
+                    <div class="absolute inset-0 bg-primary/20 blur-md rounded-xl"></div>
+                    <div class="relative h-24 bg-surface-dark border-2 border-primary rounded-xl flex flex-col items-center justify-center gap-1 p-2 transition-transform active:scale-95">
+                        <div class="flex items-center gap-1 font-bold text-lg text-white">
+                            <span>EN</span>
+                            <span class="material-icons text-sm text-primary">arrow_forward</span>
+                            <span>DE</span>
+                        </div>
+                        <span class="text-[10px] uppercase tracking-tighter font-semibold text-primary">Standard</span>
+                        <div class="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,242,255,0.8)]"></div>
+                    </div>
+                </button>
+                <button class="h-24 bg-surface-dark border border-neutral-700/50 rounded-xl flex flex-col items-center justify-center gap-1 p-2 transition-all hover:border-neutral-500 active:scale-95">
+                    <div class="flex items-center gap-1 font-bold text-lg text-neutral-500">
+                        <span>DE</span>
+                        <span class="material-icons text-sm">arrow_forward</span>
+                        <span>EN</span>
+                    </div>
+                    <span class="text-[10px] uppercase tracking-tighter font-semibold text-neutral-600">Reverse</span>
+                </button>
+                <button class="h-24 bg-surface-dark border border-neutral-700/50 rounded-xl flex flex-col items-center justify-center gap-1 p-2 transition-all hover:border-neutral-500 active:scale-95">
+                    <div class="flex items-center gap-1 font-bold text-lg text-neutral-500">
+                        <span class="material-icons">shuffle</span>
+                    </div>
+                    <span class="text-[10px] uppercase tracking-tighter font-semibold text-neutral-600">Mixed</span>
+                </button>
+            </div>
+        </div>
+        <div class="bg-surface-dark rounded-2xl p-6 border border-neutral-700/50 shadow-lg">
+            <div class="flex justify-between items-end mb-6">
+                <label class="text-sm font-semibold text-neutral-300">Session Length</label>
+                <div class="text-right">
+                    <span class="text-4xl font-bold text-primary tabular-nums">25</span>
+                    <span class="text-sm font-medium text-neutral-500 ml-1">words</span>
+                </div>
+            </div>
+            <div class="relative w-full h-10 flex items-center">
+                <input class="z-20 w-full focus:outline-none" max="50" min="5" step="5" type="range" value="25"/>
+                <div class="absolute w-full flex justify-between px-1 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                </div>
+            </div>
+            <div class="flex justify-between mt-2 text-[10px] text-neutral-500 font-bold uppercase tracking-widest">
+                <span>Quick</span>
+                <span>Intense</span>
+            </div>
+        </div>
+        <div class="relative rounded-2xl overflow-hidden h-28 w-full group">
+            <img alt="Dark abstract geometric pattern" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGecjxyL2TikPRvFYCeh94w9_8Yk73WUNml_YPH6gu-N3QWS0vTDUqOhcFuYLMM6yBS2e6KAxS0ZSIMDTzOJIklvUSxMjoZe-FmPQPeiJMfbjOnvmFDeneE5u0B_zIO9D3zlmK4nQiu7YqIIVxCksGHieOkCd6691jwLho10hb-CCNLn-0GnJgeYotxYqqFEZEH2kvNWLkNrVdX4IOWGs-X880__HtPMyL6T1BpccNdQMr_9FaqKrYK2LHwxZJHADPJjnQMC2vGuk"/>
+            <div class="absolute inset-0 bg-gradient-to-r from-background-dark via-background-dark/80 to-primary/10"></div>
+            <div class="relative z-10 h-full flex items-center px-6 justify-between border border-neutral-700/30 rounded-2xl">
+                <div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">Daily Streak</div>
+                    <div class="text-2xl font-bold text-white flex items-center gap-2">
+                        <span class="material-icons text-orange-500 text-xl">local_fire_department</span> 12 Days
+                    </div>
+                </div>
+                <div class="relative h-14 w-14 flex items-center justify-center">
+                    <svg class="transform -rotate-90 w-14 h-14">
+                        <circle class="text-white/5" cx="28" cy="28" fill="transparent" r="24" stroke="currentColor" stroke-width="4"></circle>
+                        <circle class="text-secondary" cx="28" cy="28" fill="transparent" r="24" stroke="currentColor" stroke-dasharray="150" stroke-dashoffset="30" stroke-linecap="round" stroke-width="4" style="filter: drop-shadow(0 0 4px #13ec5b);"></circle>
+                    </svg>
+                    <span class="absolute text-xs font-bold text-white">80%</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent pt-12">
+        <button class="w-full bg-secondary hover:brightness-110 active:scale-[0.98] transition-all text-background-dark font-extrabold text-lg py-4 rounded-xl shadow-[0_0_25px_rgba(19,236,91,0.3)] flex items-center justify-center gap-3 group">
+            <span>Start Session</span>
+            <span class="material-icons group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </button>
+    </div>
+</div>
+
+</body></html>

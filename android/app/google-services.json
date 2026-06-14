@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "866524018140",
+    "project_id": "vokabeltrainer-fh-swf-f4417",
+    "storage_bucket": "vokabeltrainer-fh-swf-f4417.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866524018140:android:2bba66da957d0620748b19",
+        "android_client_info": {
+          "package_name": "com.fhswf.vokabeltrainer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866524018140-fo00epr18gt816iv4b0v501pqabhia8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fhswf.vokabeltrainer",
+            "certificate_hash": "ed49405c50cf9be5316292df041c6305193575f7"
+          }
+        },
+        {
+          "client_id": "866524018140-m6rl6jihei918vr4ccvljjsboqb1p0jc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fhswf.vokabeltrainer",
+            "certificate_hash": "1dd3c4a47456fd253801c881c03f4532c5aaff0d"
+          }
+        },
+        {
+          "client_id": "866524018140-9oj4jmejer2lrmu49o3hvi37qcm3ts7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6ADxplZgVsizsaCEpLtIKpejFXRpIQpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866524018140-9oj4jmejer2lrmu49o3hvi37qcm3ts7o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
