@@ -74,5 +74,7 @@
 		<string>Die Kamera wird benötigt, um Vokabeln per OCR einzuscannen.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Bilder aus der Galerie werden für den OCR-Import verwendet.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Das Mikrofon wird für die Spracherkennung beim Vokabeltraining verwendet.</string>
 	</dict>
 </plist>

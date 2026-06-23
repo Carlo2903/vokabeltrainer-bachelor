@@ -11,11 +11,14 @@ import 'providers/language_provider.dart';
 import 'providers/session_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/gamification_provider.dart';
+import 'providers/backend_provider.dart';
+import 'services/backend_service.dart';
 import 'ui/theme/app_theme.dart';
 import 'ui/widgets/app_shell.dart';
 import 'ui/screens/auth_screen.dart';
 import 'ui/screens/start_session_screen.dart';
 import 'ui/screens/active_learning_screen.dart';
+import 'ui/screens/voice_learning_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,15 +35,20 @@ class VokabelApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final firestoreService = FirestoreService();
     final trainingService = TrainingService(firestoreService);
-    final authService = AuthService();  
+    final authService = AuthService();
+    final backendService = BackendService();
 
     return MultiProvider(
       providers: [
         Provider<FirestoreService>.value(value: firestoreService),
+        Provider<BackendService>.value(value: backendService),
         ChangeNotifierProvider(create: (_) => AuthProvider(authService)),
         ChangeNotifierProvider(create: (_) => LanguageProvider(firestoreService)),
         ChangeNotifierProvider(create: (_) => VocabularyProvider(firestoreService)),
         ChangeNotifierProvider(create: (_) => SessionProvider(trainingService)),
+        ChangeNotifierProvider(
+          create: (ctx) => BackendProvider(ctx.read<BackendService>()),
+        ),
         ChangeNotifierProxyProvider<AuthProvider, GamificationProvider>(
           create: (context) => GamificationProvider(firestoreService, context.read<AuthProvider>()),
           update: (context, auth, previous) => previous ?? GamificationProvider(firestoreService, auth),
@@ -63,8 +71,9 @@ class VokabelApp extends StatelessWidget {
         ],
         home: const _AuthGate(),
         routes: {
-          '/session/start': (context) => const StartSessionScreen(),
+          '/session/start':  (context) => const StartSessionScreen(),
           '/session/active': (context) => const ActiveLearningScreen(),
+          '/session/voice':  (context) => const VoiceLearningScreen(),
         },
       ),
     );
