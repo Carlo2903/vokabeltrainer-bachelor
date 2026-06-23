@@ -6,8 +6,39 @@ import '../../providers/session_provider.dart';
 import '../../providers/language_provider.dart';
 import '../theme/app_theme.dart';
 
-class StartSessionScreen extends StatelessWidget {
+// ── Trainings-Modus ──────────────────────────────────────────────────────────
+
+/// Die zwei möglichen Trainings-Modi die der Nutzer wählen kann.
+enum _SessionMode {
+  /// Klassisches Karteikarten-Training: Karte umdrehen, Richtig/Falsch drücken.
+  flashcard,
+
+  /// Sprachbasiertes Training: Fremdsprachenwort sprechen, KI bewertet Antwort.
+  voice,
+}
+
+// ── Screen ───────────────────────────────────────────────────────────────────
+
+/// Konfigurationsscreen vor dem Start einer Lerneinheit.
+///
+/// Neu: Der Nutzer wählt hier zwischen dem klassischen [_SessionMode.flashcard]-
+/// Modus und dem KI-gestützten [_SessionMode.voice]-Modus.
+/// Je nach Auswahl navigiert der Start-Button zu '/session/active' bzw.
+/// '/session/voice'.
+///
+/// Wird als StatefulWidget implementiert, da [_selectedMode] lokaler
+/// UI-State ist — die Modus-Auswahl beeinflusst nur die Navigation
+/// und muss nicht global (im SessionProvider) gespeichert werden.
+class StartSessionScreen extends StatefulWidget {
   const StartSessionScreen({super.key});
+
+  @override
+  State<StartSessionScreen> createState() => _StartSessionScreenState();
+}
+
+class _StartSessionScreenState extends State<StartSessionScreen> {
+  // Standardmäßig ist der klassische Karteikartenmodus vorausgewählt
+  _SessionMode _selectedMode = _SessionMode.flashcard;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +50,7 @@ class StartSessionScreen extends StatelessWidget {
           backgroundColor: const Color(0xFF0A0C10),
           body: SafeArea(
             child: Column(children: [
-              // Header
+              // ── Header ──────────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                 child: Row(
@@ -34,13 +65,15 @@ class StartSessionScreen extends StatelessWidget {
                             color: AppColors.textSecondary, fontSize: 16)),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.help_outline, color: AppColors.textSecondary),
+                      icon: const Icon(Icons.help_outline,
+                          color: AppColors.textSecondary),
                       onPressed: () => _showHelpSheet(context),
                     ),
                   ],
                 ),
               ),
-              // Scrollable Content
+
+              // ── Scrollbarer Inhalt ───────────────────────────────────────
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 120),
@@ -51,31 +84,75 @@ class StartSessionScreen extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           style: GoogleFonts.lexend(
-                              fontSize: 38, fontWeight: FontWeight.w700, color: Colors.white),
+                              fontSize: 38,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
                           children: [
                             const TextSpan(text: 'Training starten'),
-                            TextSpan(text: '.', style: GoogleFonts.lexend(
-                                color: const Color(0xFF13EC5B), fontSize: 38, fontWeight: FontWeight.w700)),
+                            TextSpan(
+                                text: '.',
+                                style: GoogleFonts.lexend(
+                                    color: const Color(0xFF13EC5B),
+                                    fontSize: 38,
+                                    fontWeight: FontWeight.w700)),
                           ],
                         ),
                       ),
-                      Text('Passe dein tägliches Wiederholungsprogramm individuell an..',
-                          style: GoogleFonts.lexend(color: AppColors.textSecondary)),
+                      Text(
+                          'Passe dein tägliches Wiederholungsprogramm individuell an..',
+                          style:
+                              GoogleFonts.lexend(color: AppColors.textSecondary)),
                       const SizedBox(height: 28),
-                      // Master Pile Card
+
+                      // Meisterstapel-Card
                       _buildMasterPileCard(masterCount),
                       const SizedBox(height: 28),
-                      // Übersetzungsrichtung
-                      Text('Übersetzungsrichtung',
+
+                      // ── NEU: Modus-Auswahl ─────────────────────────────
+                      Text('Trainings-Modus',
                           style: GoogleFonts.lexend(
-                              fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w600)),
                       const SizedBox(height: 14),
-                      _buildDirectionSelector(context, sessionProv),
+                      _buildModeSelector(),
                       const SizedBox(height: 28),
-                      // Session Länge
+
+                      // Übersetzungsrichtung — nur im Karteikartenmodus relevant
+                      // AnimatedSwitcher blendet den Block sanft aus/ein
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        transitionBuilder: (child, animation) => FadeTransition(
+                          opacity: animation,
+                          child: SizeTransition(
+                            sizeFactor: animation,
+                            axisAlignment: -1,
+                            child: child,
+                          ),
+                        ),
+                        child: _selectedMode == _SessionMode.flashcard
+                            ? Column(
+                                key: const ValueKey('direction'),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Übersetzungsrichtung',
+                                      style: GoogleFonts.lexend(
+                                          fontSize: 13,
+                                          color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600)),
+                                  const SizedBox(height: 14),
+                                  _buildDirectionSelector(context, sessionProv),
+                                  const SizedBox(height: 28),
+                                ],
+                              )
+                            : const SizedBox.shrink(key: ValueKey('no-direction')),
+                      ),
+
+                      // Sitzungsdauer
                       _buildSessionLengthSlider(context, sessionProv),
                       const SizedBox(height: 24),
-                      // Streak Banner
+
+                      // Streak-Banner
                       _buildStreakBanner(),
                     ],
                   ),
@@ -83,7 +160,8 @@ class StartSessionScreen extends StatelessWidget {
               ),
             ]),
           ),
-          // Start Button
+
+          // ── Start-Button ────────────────────────────────────────────────
           bottomSheet: Container(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
             decoration: const BoxDecoration(
@@ -99,19 +177,40 @@ class StartSessionScreen extends StatelessWidget {
                 onPressed: masterCount == 0
                     ? null
                     : () {
+                        // Session im SessionProvider initialisieren
                         sessionProv.startSession(vocabProv.all);
-                        Navigator.of(context).pushNamed('/session/active');
+
+                        // Route je nach gewähltem Modus
+                        final route = _selectedMode == _SessionMode.voice
+                            ? '/session/voice'
+                            : '/session/active';
+                        Navigator.of(context).pushNamed(route);
                       },
-                icon: const Icon(Icons.arrow_forward),
-                label: Text('Session starten',
-                    style: GoogleFonts.lexend(fontWeight: FontWeight.w800, fontSize: 17)),
+                icon: Icon(
+                  _selectedMode == _SessionMode.voice
+                      ? Icons.mic_rounded
+                      : Icons.arrow_forward,
+                ),
+                label: Text(
+                  _selectedMode == _SessionMode.voice
+                      ? 'Sprachtraining starten'
+                      : 'Session starten',
+                  style: GoogleFonts.lexend(
+                      fontWeight: FontWeight.w800, fontSize: 17),
+                ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF13EC5B),
-                  foregroundColor: Colors.black,
+                  // Sprachmodus → Indigo-Akzent, Kartenmodus → Grün
+                  backgroundColor: _selectedMode == _SessionMode.voice
+                      ? AppColors.primary
+                      : const Color(0xFF13EC5B),
+                  foregroundColor: Colors.white,
                   disabledBackgroundColor: AppColors.surfaceLight,
                   padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  shadowColor: const Color(0xFF13EC5B),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  shadowColor: _selectedMode == _SessionMode.voice
+                      ? AppColors.primary
+                      : const Color(0xFF13EC5B),
                   elevation: 12,
                 ),
               ),
@@ -119,6 +218,157 @@ class StartSessionScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  // ── Modus-Selektor ─────────────────────────────────────────────────────────
+  //
+  // Zwei nebeneinander stehende, selektierbare Cards — identisches Muster wie
+  // _buildDirectionSelector. Konsistente Designsprache im gesamten Screen.
+
+  Widget _buildModeSelector() {
+    final modes = [
+      (
+        mode: _SessionMode.flashcard,
+        icon: Icons.style_rounded,         // Karten-Icon
+        label: 'Karteikarten',
+        sublabel: 'Klassisch',
+        color: const Color(0xFF00F2FF),    // Cyan — bereits im Direction-Selector
+        description: 'Karte umdrehen und\nselbst bewerten',
+      ),
+      (
+        mode: _SessionMode.voice,
+        icon: Icons.mic_rounded,           // Mikrofon-Icon
+        label: 'Sprachmodus',
+        sublabel: 'KI-gestützt',
+        color: AppColors.primary,          // Indigo — Primary-Farbe der App
+        description: 'Antwort einsprechen,\nKI bewertet automatisch',
+      ),
+    ];
+
+    return Row(
+      children: modes.map((opt) {
+        final isSelected = _selectedMode == opt.mode;
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedMode = opt.mode),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOut,
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? opt.color.withValues(alpha: 0.07)
+                      : const Color(0xFF161B22),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected
+                        ? opt.color
+                        : const Color(0xFF30363D).withValues(alpha: 0.5),
+                    width: isSelected ? 2 : 1,
+                  ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: opt.color.withValues(alpha: 0.2),
+                            blurRadius: 20,
+                            spreadRadius: 0,
+                          )
+                        ]
+                      : null,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Icon-Badge
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: opt.color.withValues(
+                            alpha: isSelected ? 0.18 : 0.08),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: opt.color.withValues(
+                              alpha: isSelected ? 0.4 : 0.15),
+                        ),
+                      ),
+                      child: Icon(
+                        opt.icon,
+                        color: isSelected ? opt.color : AppColors.textMuted,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Modus-Name
+                    Text(
+                      opt.label,
+                      style: GoogleFonts.lexend(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: isSelected ? Colors.white : AppColors.textMuted,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+
+                    // Sublabel (z.B. "KI-gestützt")
+                    Text(
+                      opt.sublabel,
+                      style: GoogleFonts.lexend(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
+                        color: isSelected ? opt.color : AppColors.textMuted,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Kurzbeschreibung
+                    Text(
+                      opt.description,
+                      style: GoogleFonts.lexend(
+                        fontSize: 11,
+                        color: isSelected
+                            ? AppColors.textSecondary
+                            : AppColors.textMuted,
+                        height: 1.5,
+                      ),
+                    ),
+
+                    // Selektiert-Indikator unten rechts
+                    if (isSelected) ...[
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: opt.color.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(99),
+                          ),
+                          child: Text(
+                            '✓ AKTIV',
+                            style: GoogleFonts.lexend(
+                              fontSize: 8,
+                              fontWeight: FontWeight.w800,
+                              color: opt.color,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -220,11 +470,27 @@ class StartSessionScreen extends StatelessWidget {
                     ),
                     _helpDivider(),
                     _helpItem(
+                      icon: Icons.style_rounded,
+                      iconColor: const Color(0xFF00F2FF),
+                      title: 'Karteikarten-Modus',
+                      description:
+                          'Das klassische Karteikarten-Training: Ein Wort wird angezeigt, du denkst an die Übersetzung und deckst dann die Lösung auf. Du bewertest dich selbst mit Richtig oder Falsch.',
+                    ),
+                    _helpDivider(),
+                    _helpItem(
+                      icon: Icons.mic_rounded,
+                      iconColor: AppColors.primary,
+                      title: 'Sprachmodus',
+                      description:
+                          'KI-gestütztes Sprachtraining: Die App zeigt dir ein Fremdsprachenwort. Du sprichst deine Übersetzung auf Deutsch ein – Whisper erkennt deine Sprache und das KI-Modell bewertet deine Antwort automatisch.',
+                    ),
+                    _helpDivider(),
+                    _helpItem(
                       icon: Icons.swap_horiz_rounded,
                       iconColor: const Color(0xFF00F2FF),
                       title: 'Übersetzungsrichtung',
                       description:
-                          'Lege fest, in welche Richtung du übersetzen möchtest:\n\n'  
+                          'Lege fest, in welche Richtung du übersetzen möchtest (nur im Karteikarten-Modus):\n\n'
                           '• Standard – von deiner Ausgangssprache in die Zielsprache.\n'
                           '• Umkehren – von der Zielsprache zurück in die Ausgangssprache.\n'
                           '• Gemischt – beide Richtungen werden zufällig kombiniert.',
@@ -311,14 +577,16 @@ class StartSessionScreen extends StatelessWidget {
         color: const Color(0xFF30363D).withValues(alpha: 0.4),
       );
 
-  // ── Section Builders ─────────────────────────────────────────────────
+  // ── Section Builders (unverändert) ────────────────────────────────────────
+
   Widget _buildMasterPileCard(int count) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: const Color(0xFF161B22),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.5)),
+        border:
+            Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,22 +594,28 @@ class StartSessionScreen extends StatelessWidget {
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('MEISTERSTAPEL',
                 style: GoogleFonts.lexend(
-                    fontSize: 9, color: const Color(0xFF13EC5B),
-                    fontWeight: FontWeight.w700, letterSpacing: 1.8)),
+                    fontSize: 9,
+                    color: const Color(0xFF13EC5B),
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.8)),
             const SizedBox(height: 4),
             Text('$count Wörter',
                 style: GoogleFonts.lexend(
-                    fontSize: 24, color: Colors.white, fontWeight: FontWeight.w700)),
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700)),
             Text('Bereit zur Überprüfung',
                 style: GoogleFonts.lexend(
                     fontSize: 13, color: AppColors.textSecondary)),
           ]),
           Container(
-            width: 48, height: 48,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: const Color(0xFF13EC5B).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF13EC5B).withValues(alpha: 0.2)),
+              border: Border.all(
+                  color: const Color(0xFF13EC5B).withValues(alpha: 0.2)),
             ),
             child: const Icon(Icons.inventory_2, color: Color(0xFF13EC5B)),
           ),
@@ -375,26 +649,40 @@ class StartSessionScreen extends StatelessWidget {
                   color: const Color(0xFF161B22),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF00F2FF) : const Color(0xFF30363D).withValues(alpha: 0.5),
+                    color: isSelected
+                        ? const Color(0xFF00F2FF)
+                        : const Color(0xFF30363D).withValues(alpha: 0.5),
                     width: isSelected ? 2 : 1,
                   ),
                   boxShadow: isSelected
-                      ? [const BoxShadow(
-                          color: Color(0x3300F2FF), blurRadius: 16, spreadRadius: 2)]
+                      ? [
+                          const BoxShadow(
+                              color: Color(0x3300F2FF),
+                              blurRadius: 16,
+                              spreadRadius: 2)
+                        ]
                       : null,
                 ),
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text(opt.$2,
-                      style: GoogleFonts.lexend(
-                          fontSize: 15, fontWeight: FontWeight.w700,
-                          color: isSelected ? Colors.white : AppColors.textMuted)),
-                  const SizedBox(height: 4),
-                  Text(opt.$3,
-                      style: GoogleFonts.lexend(
-                          fontSize: 9, fontWeight: FontWeight.w600,
-                          letterSpacing: 0.8,
-                          color: isSelected ? const Color(0xFF00F2FF) : AppColors.textMuted)),
-                ]),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(opt.$2,
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: isSelected
+                                  ? Colors.white
+                                  : AppColors.textMuted)),
+                      const SizedBox(height: 4),
+                      Text(opt.$3,
+                          style: GoogleFonts.lexend(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.8,
+                              color: isSelected
+                                  ? const Color(0xFF00F2FF)
+                                  : AppColors.textMuted)),
+                    ]),
               ),
             ),
           ),
@@ -409,22 +697,30 @@ class StartSessionScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF161B22),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.5)),
+        border:
+            Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.5)),
       ),
       child: Column(
         children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Sitzungsdauer',
                 style: GoogleFonts.lexend(
-                    fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
-            Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic,
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
                 Text('${prov.sessionLength}',
                     style: GoogleFonts.lexend(
-                        fontSize: 38, color: const Color(0xFF00F2FF), fontWeight: FontWeight.w700)),
+                        fontSize: 38,
+                        color: const Color(0xFF00F2FF),
+                        fontWeight: FontWeight.w700)),
                 const SizedBox(width: 4),
                 Text('wörter',
-                    style: GoogleFonts.lexend(fontSize: 13, color: AppColors.textMuted)),
+                    style: GoogleFonts.lexend(
+                        fontSize: 13, color: AppColors.textMuted)),
               ],
             ),
           ]),
@@ -448,10 +744,16 @@ class StartSessionScreen extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('SCHNELL',
                 style: GoogleFonts.lexend(
-                    fontSize: 9, color: AppColors.textMuted, fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+                    fontSize: 9,
+                    color: AppColors.textMuted,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5)),
             Text('INTENSIV',
                 style: GoogleFonts.lexend(
-                    fontSize: 9, color: AppColors.textMuted, fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+                    fontSize: 9,
+                    color: AppColors.textMuted,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5)),
           ]),
         ],
       ),
@@ -464,30 +766,39 @@ class StartSessionScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF161B22),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.3)),
+        border:
+            Border.all(color: const Color(0xFF30363D).withValues(alpha: 0.3)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('TÄGLICHE SERIE',
                   style: GoogleFonts.lexend(
-                      fontSize: 9, color: AppColors.textMuted,
-                      fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+                      fontSize: 9,
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.5)),
               const SizedBox(height: 6),
               Row(children: [
-                const Icon(Icons.local_fire_department, color: Colors.orange, size: 20),
+                const Icon(Icons.local_fire_department,
+                    color: Colors.orange, size: 20),
                 const SizedBox(width: 6),
                 Text('0 tage',
                     style: GoogleFonts.lexend(
-                        fontSize: 22, color: Colors.white, fontWeight: FontWeight.w700)),
+                        fontSize: 22,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700)),
               ]),
             ],
           ),
           SizedBox(
-            width: 56, height: 56,
+            width: 56,
+            height: 56,
             child: Stack(alignment: Alignment.center, children: [
               CircularProgressIndicator(
                 value: 0.8,
@@ -497,7 +808,9 @@ class StartSessionScreen extends StatelessWidget {
               ),
               Text('80%',
                   style: GoogleFonts.lexend(
-                      fontSize: 11, color: Colors.white, fontWeight: FontWeight.w700)),
+                      fontSize: 11,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700)),
             ]),
           ),
         ],
