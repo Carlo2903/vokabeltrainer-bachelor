@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/language_pair.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/gamification_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/vocabulary_provider.dart';
 import '../theme/app_theme.dart';
@@ -15,8 +16,8 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<LanguageProvider, VocabularyProvider>(
-      builder: (context, langProv, vocabProv, _) {
+    return Consumer3<LanguageProvider, VocabularyProvider, GamificationProvider>(
+      builder: (context, langProv, vocabProv, gameProv, _) {
         final selectedPair = langProv.selected;
         if (selectedPair != null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,7 +39,7 @@ class DashboardScreen extends StatelessWidget {
                       children: [
                         _buildHeader(context),
                         const SizedBox(height: 28),
-                        _buildStatsRow(vocabProv),
+                        _buildStatsRow(vocabProv, gameProv),
                         const SizedBox(height: 28),
                         _buildSectionTitle(context, 'Aktive Kurse'),
                         const SizedBox(height: 16),
@@ -96,14 +97,14 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsRow(VocabularyProvider vocabProv) {
+  Widget _buildStatsRow(VocabularyProvider vocabProv, GamificationProvider gameProv) {
     return Row(
       children: [
         Expanded(child: _buildStatCard(
           icon: Icons.local_fire_department,
           iconColor: AppColors.accent,
           label: 'TÄGLICHE SERIE',
-          value: '0',
+          value: '${gameProv.currentStreak}',
           unit: 'tage',
         )),
         const SizedBox(width: 14),

@@ -2,17 +2,34 @@ import 'package:flutter/material.dart';
 import '../models/vocabulary.dart';
 import '../services/training_service.dart';
 import 'gamification_provider.dart';
+import 'vocabulary_provider.dart';
+import 'language_provider.dart';
 
 enum TranslationDirection { standard, reverse, mixed }
 
 class SessionProvider extends ChangeNotifier {
   final TrainingService _trainingService;
   GamificationProvider? _gamificationProvider;
+  VocabularyProvider? _vocabularyProvider;
+  LanguageProvider? _languageProvider;
+
+  // Zählt abgeschlossene Sessions (wird in Firestore NICHT gespeichert,
+  // da es für die Bachelorarbeit nur als Badge-Trigger dient)
+  int _totalSessionsCompleted = 0;
 
   SessionProvider(this._trainingService);
 
   void setGamificationProvider(GamificationProvider gamificationProvider) {
     _gamificationProvider = gamificationProvider;
+  }
+
+  /// Optional: Für Badge-Checks die Vocab- und Language-Provider setzen.
+  void setContextProviders({
+    VocabularyProvider? vocabProvider,
+    LanguageProvider? languageProvider,
+  }) {
+    _vocabularyProvider = vocabProvider;
+    _languageProvider = languageProvider;
   }
 
   List<Vocabulary> _queue = [];
@@ -92,10 +109,6 @@ class SessionProvider extends ChangeNotifier {
     final word = currentWord;
     if (word == null) return;
     await _trainingService.markCorrect(uid, word);
-    
-    // Gamification Integration
-    await _gamificationProvider?.addXP(10);
-    
     _correctCount++;
     _advance();
   }
@@ -113,10 +126,27 @@ class SessionProvider extends ChangeNotifier {
       _currentIndex++;
     } else {
       _isFinished = true;
-      // Streak updates on session completion
-      _gamificationProvider?.updateStreakOnSessionComplete();
+      _onSessionFinished();
     }
     notifyListeners();
+  }
+
+  /// Wird intern aufgerufen wenn die letzte Vokabel bewertet wurde.
+  ///
+  /// Ruft [GamificationProvider.sessionCompleted] auf — die Facade,
+  /// die XP, Streak und alle Badge-Checks zusammen abwickelt.
+  void _onSessionFinished() {
+    _totalSessionsCompleted++;
+
+    final masteredTotal = _vocabularyProvider?.mastered.length ?? 0;
+    final languageCount = _languageProvider?.pairs.length ?? 0;
+
+    _gamificationProvider?.sessionCompleted(
+      correctCount: _correctCount,
+      masteredTotal: masteredTotal,
+      languageCount: languageCount,
+      sessionCount: _totalSessionsCompleted,
+    );
   }
 
   void resetSession() {

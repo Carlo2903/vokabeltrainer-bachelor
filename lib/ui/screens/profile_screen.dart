@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../models/badge_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/gamification_provider.dart';
 import '../../providers/vocabulary_provider.dart';
 import '../../services/firestore_service.dart';
 import '../theme/app_theme.dart';
@@ -262,8 +263,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthProvider, VocabularyProvider>(
-      builder: (context, auth, vocab, _) {
+    return Consumer3<AuthProvider, VocabularyProvider, GamificationProvider>(
+      builder: (context, auth, vocab, game, _) {
         final user = auth.currentUser;
         final displayName = user?.displayName ?? 'User';
         final email = user?.email ?? '';
@@ -407,7 +408,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 icon: Icons.local_fire_department_rounded,
                                 iconColor: AppColors.accent,
                                 label: 'AKTUELLER STREAK',
-                                value: '0',
+                                value: '${game.currentStreak}',
                                 sub: 'Tage',
                               ),
                             ),
@@ -422,7 +423,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           sub: 'aktiv',
                         ),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 28),
+
+                        // ── Liga-Karte ───────────────────────────────────
+                        _buildSectionTitle('Liga'),
+                        const SizedBox(height: 16),
+                        _buildLeagueCard(game),
+
+                        const SizedBox(height: 28),
+
+                        // ── Badges ────────────────────────────────────────
+                        _buildSectionTitle('Abzeichen'),
+                        const SizedBox(height: 16),
+                        _buildBadgesGrid(game),
+
+                        const SizedBox(height: 28),
 
                         // ── Logout ─────────────────────────────────────
                         SizedBox(
@@ -616,4 +631,221 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  // ── Liga-Karte ─────────────────────────────────────────────────────────────
+
+  Widget _buildLeagueCard(GamificationProvider game) {
+    final league = game.currentLeague;
+    final progress = league.progressInLeague(game.currentXP);
+    final xpToNext = league.xpToNextLeague(game.currentXP);
+    final nextLeague = league.nextLeague;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: league.color.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: league.color.withValues(alpha: 0.25)),
+        boxShadow: [
+          BoxShadow(color: league.glowColor, blurRadius: 20),
+        ],
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Text(league.emoji, style: const TextStyle(fontSize: 32)),
+          const SizedBox(width: 14),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('AKTUELLE LIGA',
+                style: GoogleFonts.lexend(
+                    fontSize: 9, color: league.color,
+                    fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+            Text(league.name,
+                style: GoogleFonts.lexend(
+                    fontSize: 24, color: Colors.white, fontWeight: FontWeight.w700)),
+          ]),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: league.color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(99),
+            ),
+            child: Text('${game.currentXP} XP',
+                style: GoogleFonts.lexend(
+                    fontSize: 12, color: league.color, fontWeight: FontWeight.w700)),
+          ),
+        ]),
+        if (nextLeague != null) ...[
+          const SizedBox(height: 20),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('Zu ${nextLeague.emoji} ${nextLeague.name}',
+                style: GoogleFonts.lexend(fontSize: 11, color: AppColors.textSecondary)),
+            Text('noch ${xpToNext} XP',
+                style: GoogleFonts.lexend(
+                    fontSize: 11, color: league.color, fontWeight: FontWeight.w600)),
+          ]),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(99),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: const Color(0xFF1E293B),
+              valueColor: AlwaysStoppedAnimation<Color>(league.color),
+              minHeight: 10,
+            ),
+          ),
+        ] else ...[
+          const SizedBox(height: 12),
+          Text('💎 Höchste Liga erreicht!',
+              style: GoogleFonts.lexend(
+                  fontSize: 13, color: league.color, fontWeight: FontWeight.w600)),
+        ],
+      ]),
+    );
+  }
+
+  // ── Badges-Grid ────────────────────────────────────────────────────────────
+
+  Widget _buildBadgesGrid(GamificationProvider game) {
+    final badges = game.allBadges;
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.75,
+      ),
+      itemCount: badges.length,
+      itemBuilder: (context, i) => _buildBadgeItem(badges[i]),
+    );
+  }
+
+  Widget _buildBadgeItem(BadgeModel badge) {
+    final unlocked = badge.isUnlocked;
+    final color = _colorFromHex(badge.colorHex);
+
+    return GestureDetector(
+      onTap: () => _showBadgeDetail(badge),
+      child: Column(children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: unlocked
+                ? color.withValues(alpha: 0.15)
+                : AppColors.surface.withValues(alpha: 0.5),
+            border: Border.all(
+              color: unlocked
+                  ? color.withValues(alpha: 0.5)
+                  : AppColors.border.withValues(alpha: 0.3),
+              width: unlocked ? 2 : 1,
+            ),
+            boxShadow: unlocked
+                ? [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 12)]
+                : null,
+          ),
+          child: Icon(
+            unlocked ? _iconFromName(badge.iconName) : Icons.lock_rounded,
+            color: unlocked ? color : AppColors.textMuted,
+            size: 28,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          badge.name,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.lexend(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: unlocked ? Colors.white : AppColors.textMuted,
+              height: 1.3),
+        ),
+      ]),
+    );
+  }
+
+  void _showBadgeDetail(BadgeModel badge) {
+    final unlocked = badge.isUnlocked;
+    final color = _colorFromHex(badge.colorHex);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF161B22),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        padding: const EdgeInsets.all(28),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(
+            width: 80, height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: unlocked ? color.withValues(alpha: 0.15) : AppColors.surface,
+              border: Border.all(
+                color: unlocked ? color.withValues(alpha: 0.4) : AppColors.border,
+                width: 2),
+            ),
+            child: Icon(
+              unlocked ? _iconFromName(badge.iconName) : Icons.lock_rounded,
+              color: unlocked ? color : AppColors.textMuted,
+              size: 36),
+          ),
+          const SizedBox(height: 16),
+          Text(badge.name,
+              style: GoogleFonts.lexend(
+                  fontSize: 22,
+                  color: unlocked ? Colors.white : AppColors.textMuted,
+                  fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          Text(badge.description,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.lexend(
+                  fontSize: 14, color: AppColors.textSecondary, height: 1.5)),
+          if (unlocked && badge.unlockedAt != null) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(99),
+              ),
+              child: Text(
+      '🏆 Erreicht am ${_fmtDate(badge.unlockedAt!)}',
+                style: GoogleFonts.lexend(
+                    fontSize: 12, color: color, fontWeight: FontWeight.w600)),
+            ),
+          ],
+          const SizedBox(height: 24),
+        ]),
+      ),
+    );
+  }
+
+  Color _colorFromHex(String hex) {
+    try { return Color(int.parse('FF$hex', radix: 16)); } catch (_) { return AppColors.primary; }
+  }
+
+  IconData _iconFromName(String name) {
+    const map = <String, IconData>{
+      'workspace_premium': Icons.workspace_premium,
+      'local_fire_department': Icons.local_fire_department,
+      'menu_book': Icons.menu_book,
+      'bolt': Icons.bolt,
+      'psychology': Icons.psychology,
+      'groups': Icons.groups,
+      'history_edu': Icons.history_edu,
+    };
+    return map[name] ?? Icons.emoji_events;
+  }
+
+  String _fmtDate(DateTime d) =>
+      '${d.day.toString().padLeft(2,'0')}.${d.month.toString().padLeft(2,'0')}.${d.year}';
 }
