@@ -101,25 +101,30 @@ class _AuthGateState extends State<_AuthGate> {
     final authProvider = context.watch<AuthProvider>();
     final uid = authProvider.currentUser?.uid;
 
-    // uid in Providers setzen, damit sie user-spezifische Daten laden
-    final langProv = context.read<LanguageProvider>();
-    final vocabProv = context.read<VocabularyProvider>();
-    final sessionProv = context.read<SessionProvider>();
-    final gamificationProv = context.read<GamificationProvider>();
-    
-    langProv.setUid(uid);
-    vocabProv.setUid(uid);
-    sessionProv.setGamificationProvider(gamificationProv);
-    sessionProv.setContextProviders(
-      vocabProvider: vocabProv,
-      languageProvider: context.read<LanguageProvider>(),
-    );
+    // uid in Providers setzen, damit sie user-spezifische Daten laden.
+    // addPostFrameCallback verhindert "setState() during build"-Fehler:
+    // notifyListeners() darf nicht während eines laufenden Build-Durchlaufs
+    // ausgelöst werden — PostFrameCallback verschiebt den Aufruf sicher danach.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final langProv = context.read<LanguageProvider>();
+      final vocabProv = context.read<VocabularyProvider>();
+      final sessionProv = context.read<SessionProvider>();
+      final gamificationProv = context.read<GamificationProvider>();
+
+      langProv.setUid(uid);
+      vocabProv.setUid(uid);
+      sessionProv.setGamificationProvider(gamificationProv);
+      sessionProv.setContextProviders(
+        vocabProvider: vocabProv,
+        languageProvider: langProv,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    _syncProviders();
 
     // Initialer Ladescreen
     if (authProvider.isLoading) {

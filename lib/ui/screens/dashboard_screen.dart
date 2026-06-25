@@ -9,6 +9,7 @@ import '../../providers/vocabulary_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/add_language_dialog.dart';
 import '../widgets/user_avatar.dart';
+import 'conjugation_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   final VoidCallback? onProfileTap;
@@ -47,6 +48,8 @@ class DashboardScreen extends StatelessWidget {
                           _buildActiveCourseCard(context, selectedPair, vocabProv),
                         const SizedBox(height: 16),
                         ..._buildInactiveCourses(context, langProv, selectedPair),
+                        const SizedBox(height: 16),
+                        _buildKiConjugationBanner(context),
                         const SizedBox(height: 16),
                         _buildAddLanguageButton(context, langProv, vocabProv),
                         const SizedBox(height: 100),
@@ -562,6 +565,80 @@ class DashboardScreen extends StatelessWidget {
               style: GoogleFonts.lexend(
                   fontSize: 10, color: AppColors.textMuted,
                   fontWeight: FontWeight.w700, letterSpacing: 1.8)),
+        ]),
+      ),
+    );
+  }
+
+  /// KI-Konjugation Banner — direkter Einstieg in den [ConjugationScreen].
+  Widget _buildKiConjugationBanner(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const ConjugationScreen()),
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.primary.withValues(alpha: 0.12),
+              AppColors.accent.withValues(alpha: 0.06),
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.primary.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.2)),
+            ),
+            child: const Icon(Icons.psychology_rounded,
+                color: AppColors.primary, size: 26),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('KI-Konjugation',
+                    style: GoogleFonts.lexend(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700)),
+                Text('Verbtabellen von Ollama generieren',
+                    style: GoogleFonts.lexend(
+                        fontSize: 11,
+                        color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(99),
+            ),
+            child: Text('KI',
+                style: GoogleFonts.lexend(
+                    fontSize: 10,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1)),
+          ),
+          const SizedBox(width: 6),
+          const Icon(Icons.arrow_forward_ios_rounded,
+              color: AppColors.textMuted, size: 14),
         ]),
       ),
     );

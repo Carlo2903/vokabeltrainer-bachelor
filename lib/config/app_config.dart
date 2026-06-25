@@ -14,7 +14,7 @@ class AppConfig {
   /// Android-Emulator : http://10.0.2.2:8000
   /// Physisches Gerät : http://[lokale-IP]:8000  (z. B. http://192.168.1.42:8000)
   /// Flutter Desktop  : http://localhost:8000
-  static const String backendBaseUrl = 'http://10.0.2.2:8000';
+  static const String backendBaseUrl = 'http://192.168.178.67:8000';
 
   /// Timeout für normale API-Calls (Konjugation, Bewertung).
   static const Duration apiTimeout = Duration(seconds: 30);
