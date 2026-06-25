@@ -121,7 +121,8 @@ class BackendProvider extends ChangeNotifier {
   Future<bool?> evaluateAnswer({
     required String userAnswer,
     required String correctAnswer,
-    String? vocabulary,
+    String? word,
+    String? language,
   }) async {
     _setLoading();
     _lastEvaluationResult = null;
@@ -129,7 +130,8 @@ class BackendProvider extends ChangeNotifier {
       final result = await _service.evaluateAnswer(
         userAnswer: userAnswer,
         correctAnswer: correctAnswer,
-        vocabulary: vocabulary,
+        word: word,
+        language: language,
       );
       _lastEvaluationResult = result;
       _setSuccess();

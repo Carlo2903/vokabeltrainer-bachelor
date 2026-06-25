@@ -10,6 +10,7 @@ import 'package:record/record.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/backend_provider.dart';
 import '../../providers/gamification_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../providers/session_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/mic_button.dart';
@@ -159,18 +160,19 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
 
     final session = context.read<SessionProvider>();
     final backend = context.read<BackendProvider>();
+    final langProv = context.read<LanguageProvider>();
     final word = session.currentWord;
 
     if (word == null) return;
 
     // Abfrage-Richtung: App zeigt term (Fremdsprache), erwartet translation (Deutsch)
     final correctAnswer = word.translation;
-    final vocabulary = word.term;
 
     final isCorrect = await backend.evaluateAnswer(
       userAnswer: _transcribedText ?? '',
       correctAnswer: correctAnswer,
-      vocabulary: vocabulary,
+      word: word.term,                                    // Verb-Kontext für das LLM
+      language: langProv.selected?.targetLanguage ?? '', // Sprache für das LLM
     );
 
     if (!mounted) return;

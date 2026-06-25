@@ -175,7 +175,8 @@ class BackendService {
   Future<bool> evaluateAnswer({
     required String userAnswer,
     required String correctAnswer,
-    String? vocabulary,
+    String? word,       // Das Vokabel-Wort (term) für Kontext
+    String? language,  // Sprache für Kontext
   }) async {
     try {
       final response = await _client
@@ -184,9 +185,10 @@ class BackendService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'mode': 'evaluation',
+              'word': word ?? '',           // Backend erwartet 'word'
+              'language': language ?? '',   // Backend erwartet 'language'
               'user_answer': userAnswer,
               'correct_answer': correctAnswer,
-              'vocabulary': vocabulary,
             }),
           )
           .timeout(AppConfig.apiTimeout);
