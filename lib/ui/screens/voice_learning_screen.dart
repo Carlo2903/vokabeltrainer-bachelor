@@ -132,10 +132,7 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
     setState(() => _phase = _VoicePhase.transcribing);
 
     final backend = context.read<BackendProvider>();
-    final result = await backend.transcribeAudio(
-      audioFile,
-      mimeType: 'audio/mp4', // .m4a ist technisch ein MPEG-4-Container
-    );
+    final result = await backend.transcribeAudio(audioFile);
 
     if (!mounted) return; // Widget könnte in der Zwischenzeit disposed worden sein
 

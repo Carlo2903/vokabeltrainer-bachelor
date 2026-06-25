@@ -83,14 +83,27 @@ class BackendService {
 
   /// Schickt eine Audiodatei an Whisper und gibt den transkribierten Text zurück.
   ///
-  /// [audioFile]  – Die aufgenommene Audiodatei (z. B. .m4a, .wav, .mp3).
-  /// [mimeType]   – MIME-Typ der Datei, Standard: audio/mpeg.
+  /// [audioFile]  – Die aufgenommene Audiodatei (.m4a von der record-Library).
+  /// [mimeType]   – MIME-Typ der Datei, Standard: audio/mp4 (für .m4a).
   ///
   /// Wirft [BackendException] bei Verbindungs- oder HTTP-Fehlern.
   Future<TranscriptionResult> transcribeAudio(
     File audioFile, {
-    String mimeType = 'audio/mpeg',
+    String mimeType = 'audio/mp4', // .m4a ist ein MPEG-4-Audiocontainer
   }) async {
+    // Datei-Validierung vor dem Senden:
+    // Eine nicht-existente oder leere Datei würde sofort 422 produzieren.
+    if (!audioFile.existsSync()) {
+      throw const BackendException('Audiodatei existiert nicht.');
+    }
+    final fileSize = audioFile.lengthSync();
+    if (fileSize < 1024) {
+      // Weniger als 1 KB → Aufnahme war zu kurz oder fehlgeschlagen
+      throw BackendException(
+        'Audiodatei zu klein ($fileSize Bytes). Bitte länger sprechen.',
+      );
+    }
+
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -98,7 +111,7 @@ class BackendService {
       );
 
       request.files.add(await http.MultipartFile.fromPath(
-        'file', // Feldname wie im Backend erwartet
+        'audio', // Backend erwartet Feldname 'audio' (nicht 'file')
         audioFile.path,
         contentType: MediaType.parse(mimeType),
       ));
