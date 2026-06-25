@@ -140,7 +140,7 @@ class BackendService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'mode': 'conjugation',
-              'verb': verb,
+              'word': verb,        // Backend erwartet 'word', nicht 'verb'
               'language': language,
             }),
           )
@@ -194,13 +194,13 @@ class BackendService {
       _assertSuccess(response);
       final json = _decodeJson(response.body);
 
-      // Das Backend liefert {"correct": true/false, ...}
-      final correct = json['correct'];
+      // Backend liefert { "is_correct": true/false, "feedback": "..." }
+      final correct = json['is_correct'];
       if (correct is bool) return correct;
 
       // Fallback: Textauswertung wenn Backend nur Textantwort liefert
       final responseText =
-          (json['response'] as String? ?? '').toLowerCase();
+          (json['feedback'] as String? ?? json['response'] as String? ?? '').toLowerCase();
       return responseText.contains('correct') ||
           responseText.contains('richtig') ||
           responseText.contains('ja');

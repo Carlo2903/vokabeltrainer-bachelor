@@ -73,15 +73,20 @@ class ConjugationResult {
     required String verb,
     required String language,
   }) {
-    // Das Backend liefert entweder strukturierte "tables" oder nur "response".
+    // Backend liefert { "result": "Konjugationstabelle als Text" }
+    // 'result' ist Rohtext von Ollama. 'tables' wäre strukturiertes JSON (Zukunft).
     final rawTables = json['tables'] as List<dynamic>? ?? [];
+    final rawResponse = json['result'] as String?      // primäres Backend-Feld
+        ?? json['response'] as String?                  // Legacy-Fallback
+        ?? '';
+
     return ConjugationResult(
       verb: verb,
       language: language,
       tables: rawTables
           .map((t) => TenseTable.fromJson(t as Map<String, dynamic>))
           .toList(),
-      rawResponse: json['response'] as String? ?? '',
+      rawResponse: rawResponse,
     );
   }
 
