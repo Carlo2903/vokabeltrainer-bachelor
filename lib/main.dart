@@ -19,6 +19,7 @@ import 'ui/screens/auth_screen.dart';
 import 'ui/screens/start_session_screen.dart';
 import 'ui/screens/active_learning_screen.dart';
 import 'ui/screens/voice_learning_screen.dart';
+import 'ui/screens/conjugation_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,6 +75,7 @@ class VokabelApp extends StatelessWidget {
           '/session/start':  (context) => const StartSessionScreen(),
           '/session/active': (context) => const ActiveLearningScreen(),
           '/session/voice':  (context) => const VoiceLearningScreen(),
+          '/conjugation':    (context) => const ConjugationScreen(),
         },
       ),
     );
@@ -108,6 +110,10 @@ class _AuthGateState extends State<_AuthGate> {
     langProv.setUid(uid);
     vocabProv.setUid(uid);
     sessionProv.setGamificationProvider(gamificationProv);
+    sessionProv.setContextProviders(
+      vocabProvider: vocabProv,
+      languageProvider: context.read<LanguageProvider>(),
+    );
   }
 
   @override
