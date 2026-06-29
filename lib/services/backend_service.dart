@@ -85,11 +85,14 @@ class BackendService {
   ///
   /// [audioFile]  – Die aufgenommene Audiodatei (.m4a von der record-Library).
   /// [mimeType]   – MIME-Typ der Datei, Standard: audio/mp4 (für .m4a).
+  /// [language]   – ISO-639-1 Sprachcode für Whisper (z.B. "de", "es", "en").
+  ///                Leerer String → Whisper erkennt die Sprache automatisch.
   ///
   /// Wirft [BackendException] bei Verbindungs- oder HTTP-Fehlern.
   Future<TranscriptionResult> transcribeAudio(
     File audioFile, {
     String mimeType = 'audio/mp4', // .m4a ist ein MPEG-4-Audiocontainer
+    String language = '',          // Sprachhinweis für Whisper
   }) async {
     // Datei-Validierung vor dem Senden:
     // Eine nicht-existente oder leere Datei würde sofort 422 produzieren.
@@ -110,11 +113,19 @@ class BackendService {
         _base.replace(path: '/api/transcribe'),
       );
 
+      // Audiodatei als Multipart-Feld 'audio'
       request.files.add(await http.MultipartFile.fromPath(
         'audio', // Backend erwartet Feldname 'audio' (nicht 'file')
         audioFile.path,
         contentType: MediaType.parse(mimeType),
       ));
+
+      // Sprach-Hinweis als zusätzliches Form-Feld mitschicken.
+      // Whisper kann damit die Spracherkennung gezielter durchführen —
+      // besonders wichtig wenn Fremdsprachenwörter gesprochen werden.
+      if (language.isNotEmpty) {
+        request.fields['language'] = language;
+      }
 
       final streamedResponse = await _client
           .send(request)

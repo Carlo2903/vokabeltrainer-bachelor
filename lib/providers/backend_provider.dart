@@ -72,16 +72,19 @@ class BackendProvider extends ChangeNotifier {
 
   /// Transkribiert eine Audiodatei und speichert das Ergebnis in [lastTranscription].
   ///
+  /// [language] – ISO-639-1 Code für Whisper (z.B. "de", "es"). Leer = auto.
   /// Gibt [TranscriptionResult] zurück oder null bei Fehler.
-  /// Der Fehlertext ist dann in [lastError] verfügbar.
   Future<TranscriptionResult?> transcribeAudio(
     File audioFile, {
-    String mimeType = 'audio/mpeg',
+    String language = '',
   }) async {
     _setLoading();
     _lastTranscription = null;
     try {
-      final result = await _service.transcribeAudio(audioFile, mimeType: mimeType);
+      final result = await _service.transcribeAudio(
+        audioFile,
+        language: language,
+      );
       _lastTranscription = result;
       _setSuccess();
       return result;

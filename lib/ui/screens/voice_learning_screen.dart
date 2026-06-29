@@ -128,16 +128,30 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
   }
 
   /// Schickt die Audiodatei an Whisper und holt die Transkription.
+  ///
+  /// Die Whisper-Sprache richtet sich nach der Abfrage-Richtung:
+  /// - standard: Nutzer antwortet auf Deutsch  → language="de"
+  /// - reverse:  Nutzer antwortet in Fremdsprache → language=ISO-Code der Zielsprache
   Future<void> _transcribeAudio(File audioFile) async {
     setState(() => _phase = _VoicePhase.transcribing);
 
+    final session = context.read<SessionProvider>();
+    final langProv = context.read<LanguageProvider>();
     final backend = context.read<BackendProvider>();
-    final result = await backend.transcribeAudio(audioFile);
 
-    if (!mounted) return; // Widget könnte in der Zwischenzeit disposed worden sein
+    // Sprachcode für Whisper bestimmen:
+    // Bei standard-Richtung spricht der Nutzer Deutsch.
+    // Bei reverse spricht er die Fremdsprache (Zielsprache des Kurses).
+    final isReverse = session.direction == TranslationDirection.reverse;
+    final whisperLang = isReverse
+        ? _toIso639(langProv.selected?.targetLanguage ?? '')
+        : 'de';
+
+    final result = await backend.transcribeAudio(audioFile, language: whisperLang);
+
+    if (!mounted) return;
 
     if (result == null) {
-      // Fehler aus BackendProvider holen
       setState(() {
         _phase = _VoicePhase.idle;
         _errorMessage = backend.lastError ?? 'Transkription fehlgeschlagen.';
@@ -146,30 +160,56 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
     }
 
     _transcribedText = result.text;
-
-    // Phase 2: Bewertung mit Ollama
     await _evaluateAnswer();
   }
 
+  /// Mappt einen Sprachnamen auf einen ISO-639-1 Code für Whisper.
+  /// Whisper erwartet z.B. "de", "es", "en", "fr", "it".
+  String _toIso639(String languageName) {
+    const map = {
+      'deutsch':     'de',
+      'german':      'de',
+      'spanisch':    'es',
+      'spanish':     'es',
+      'englisch':    'en',
+      'english':     'en',
+      'französisch': 'fr',
+      'french':      'fr',
+      'italienisch': 'it',
+      'italian':     'it',
+      'portugiesisch': 'pt',
+      'portuguese':  'pt',
+    };
+    return map[languageName.toLowerCase()] ?? '';
+  }
+
   /// Schickt die Transkription und die korrekte Antwort an Ollama zur Bewertung.
+  ///
+  /// Die correctAnswer hängt von der Abfrage-Richtung ab:
+  /// - standard: App zeigt Fremdwort (term), Nutzer soll translation sprechen
+  /// - reverse:  App zeigt deutsche Übersetzung (translation), Nutzer soll term sprechen
   Future<void> _evaluateAnswer() async {
     setState(() => _phase = _VoicePhase.evaluating);
 
-    final session = context.read<SessionProvider>();
-    final backend = context.read<BackendProvider>();
+    final session  = context.read<SessionProvider>();
+    final backend  = context.read<BackendProvider>();
     final langProv = context.read<LanguageProvider>();
     final word = session.currentWord;
 
     if (word == null) return;
 
-    // Abfrage-Richtung: App zeigt term (Fremdsprache), erwartet translation (Deutsch)
-    final correctAnswer = word.translation;
+    final isReverse = session.direction == TranslationDirection.reverse;
+
+    // Je nach Richtung: Was ist die korrekte Antwort?
+    // standard → Nutzer spricht die deutsche Übersetzung
+    // reverse  → Nutzer spricht das Fremdwort
+    final correctAnswer = isReverse ? word.term : word.translation;
 
     final isCorrect = await backend.evaluateAnswer(
       userAnswer: _transcribedText ?? '',
       correctAnswer: correctAnswer,
-      word: word.term,                                    // Verb-Kontext für das LLM
-      language: langProv.selected?.targetLanguage ?? '', // Sprache für das LLM
+      word: word.term,
+      language: langProv.selected?.targetLanguage ?? '',
     );
 
     if (!mounted) return;
@@ -312,6 +352,16 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
   // ── UI-Teile ───────────────────────────────────────────────────────────────
 
   Widget _buildHeader(BuildContext context, SessionProvider session) {
+    // Hinweistext dynamisch je nach Richtung:
+    // - standard → Nutzer antwortet auf Deutsch
+    // - reverse  → Nutzer antwortet in der Fremdsprache
+    final langProv = context.read<LanguageProvider>();
+    final isReverse = session.direction == TranslationDirection.reverse;
+    final targetLang = langProv.selected?.targetLanguage ?? 'Fremdsprache';
+    final hintText = isReverse
+        ? 'Sprich das Wort auf $targetLang'
+        : 'Sprich die Übersetzung auf Deutsch';
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(
@@ -334,7 +384,7 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
                     letterSpacing: 2),
               ),
               Text(
-                'Sprich die Übersetzung',
+                hintText,
                 style: GoogleFonts.lexend(
                     fontSize: 13,
                     color: AppColors.textSecondary,

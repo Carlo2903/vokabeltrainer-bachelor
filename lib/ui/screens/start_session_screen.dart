@@ -118,7 +118,7 @@ class _StartSessionScreenState extends State<StartSessionScreen> {
                       _buildModeSelector(),
                       const SizedBox(height: 28),
 
-                      // Übersetzungsrichtung — nur im Karteikartenmodus relevant
+                      // Übersetzungsrichtung
                       // AnimatedSwitcher blendet den Block sanft aus/ein
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
@@ -130,22 +130,23 @@ class _StartSessionScreenState extends State<StartSessionScreen> {
                             child: child,
                           ),
                         ),
-                        child: _selectedMode == _SessionMode.flashcard
-                            ? Column(
-                                key: const ValueKey('direction'),
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Übersetzungsrichtung',
-                                      style: GoogleFonts.lexend(
-                                          fontSize: 13,
-                                          color: AppColors.textSecondary,
-                                          fontWeight: FontWeight.w600)),
-                                  const SizedBox(height: 14),
-                                  _buildDirectionSelector(context, sessionProv),
-                                  const SizedBox(height: 28),
-                                ],
-                              )
-                            : const SizedBox.shrink(key: ValueKey('no-direction')),
+                        // Richtungsselektor für BEIDE Modi: Flashcard und Voice.
+                        // Im Voice-Modus bestimmt die Richtung welche Sprache
+                        // der Nutzer sprechen muss und welcher Whisper-Code gesendet wird.
+                        child: Column(
+                          key: const ValueKey('direction'),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Übersetzungsrichtung',
+                                style: GoogleFonts.lexend(
+                                    fontSize: 13,
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 14),
+                            _buildDirectionSelector(context, sessionProv),
+                            const SizedBox(height: 28),
+                          ],
+                        ),
                       ),
 
                       // Sitzungsdauer
