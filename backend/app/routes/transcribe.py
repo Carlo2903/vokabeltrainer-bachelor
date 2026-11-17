@@ -1,7 +1,6 @@
 import os
 import tempfile
-from tkinter.tix import Form
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from typing import Annotated, Optional
 
 from app.services.whisper_service import transcribe_audio
