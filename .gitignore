@@ -43,3 +43,18 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Python-Backend
+backend/venv/
+backend/.venv/
+**/__pycache__/
+backend/.pytest_cache/
+backend/.env
+*.env
+backend/app/.vscode/
+
+# Modelle und Audiodateien (nicht ins Repo)
+*.gguf
+*.bin
+*.m4a
+*.wav
