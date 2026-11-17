@@ -9,10 +9,7 @@ import 'auth_provider.dart';
 
 /// Verwaltet den gesamten Gamification-State: XP, Level, Streak, Badges, Liga.
 ///
-/// Architektur-Prinzip: Alle Gamification-Aktionen laufen durch diesen Provider.
-/// Er ist der einzige Ort, der weiß wie XP-Kurven, Badge-Bedingungen und Streak-Logik
-/// funktionieren. Andere Provider (z.B. SessionProvider) rufen nur [sessionCompleted]
-/// auf und müssen nicht wissen, was dahinter passiert — das ist das Facade-Pattern.
+/// Kapselt alle Berechnungen für XP-Kurven, Badge-Bedingungen und Streaks.
 class GamificationProvider extends ChangeNotifier {
   final FirestoreService _firestoreService;
   final AuthProvider _authProvider;

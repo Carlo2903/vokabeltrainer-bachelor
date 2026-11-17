@@ -461,21 +461,25 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
   // ── Phase: Idle ────────────────────────────────────────────────────────────
 
   Widget _buildIdleView(SessionProvider session) {
-    final word = session.currentWord!;
+    final isReverse = session.direction == TranslationDirection.reverse;
+    final langProv = context.read<LanguageProvider>();
+    final targetLang = langProv.selected?.targetLanguage ?? 'Fremdsprache';
+    final promptLang = isReverse ? targetLang : 'Deutsch';
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
         children: [
-          // Vokabel-Karte
-          _buildWordCard(word.term),
+          // Vokabel-Karte — zeigt session.frontText (richtungsabhängig)
+          _buildWordCard(session.frontText),
           const SizedBox(height: 12),
 
           // Kontext: Beschreibung falls vorhanden
-          if (word.description.isNotEmpty)
+          if ((session.currentWord?.description ?? '').isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
-                word.description,
+                session.currentWord!.description,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.lexend(
                     fontSize: 13,
@@ -486,9 +490,9 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
 
           const SizedBox(height: 48),
 
-          // Anweisung
+          // Anweisung — dynamisch je nach Richtung
           Text(
-            'Drücke das Mikrofon und spreche\ndeine Übersetzung auf Deutsch',
+            'Drücke das Mikrofon und spreche\ndeine Übersetzung auf $promptLang',
             textAlign: TextAlign.center,
             style: GoogleFonts.lexend(
                 fontSize: 14, color: AppColors.textSecondary, height: 1.5),
@@ -513,14 +517,13 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
   // ── Phase: Recording ───────────────────────────────────────────────────────
 
   Widget _buildRecordingView(SessionProvider session) {
-    final word = session.currentWord!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Vokabel-Karte (kleiner während Aufnahme)
+        // Vokabel-Karte — session.frontText respektiert die Richtung
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: _buildWordCard(word.term, compact: true),
+          child: _buildWordCard(session.frontText, compact: true),
         ),
         const SizedBox(height: 48),
 
@@ -599,7 +602,6 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
   // ── Phase: Result ──────────────────────────────────────────────────────────
 
   Widget _buildResultView(SessionProvider session) {
-    final word = session.currentWord!;
     final isCorrect = _isCorrect ?? false;
     final hasError = _errorMessage != null && _isCorrect == null;
 
@@ -654,20 +656,20 @@ class _VoiceLearningScreenState extends State<VoiceLearningScreen> {
 
           const SizedBox(height: 12),
 
-          // Richtige Antwort
+          // Richtige Antwort — session.backText respektiert die Richtung
           _buildInfoCard(
             label: 'Richtige Antwort',
-            value: word.translation,
+            value: session.backText,
             icon: Icons.check_circle_outline_rounded,
             color: const Color(0xFF22C55E),
           ),
 
           const SizedBox(height: 12),
 
-          // Das abgefragte Wort
+          // Das abgefragte Wort (was wurde angezeigt)
           _buildInfoCard(
             label: 'Vokabel',
-            value: word.term,
+            value: session.frontText,
             icon: Icons.translate_rounded,
             color: AppColors.review,
           ),

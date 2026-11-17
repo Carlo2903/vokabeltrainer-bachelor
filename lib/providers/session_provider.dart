@@ -13,8 +13,7 @@ class SessionProvider extends ChangeNotifier {
   VocabularyProvider? _vocabularyProvider;
   LanguageProvider? _languageProvider;
 
-  // Zählt abgeschlossene Sessions (wird in Firestore NICHT gespeichert,
-  // da es für die Bachelorarbeit nur als Badge-Trigger dient)
+  // Zählt abgeschlossene Sessions für den Badge-Trigger
   int _totalSessionsCompleted = 0;
 
   SessionProvider(this._trainingService);

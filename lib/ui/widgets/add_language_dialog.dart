@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../../models/language_pair.dart';
-import '../../providers/vocabulary_provider.dart';
 import '../theme/app_theme.dart';
 
 class AddLanguageDialog extends StatefulWidget {
@@ -108,11 +106,15 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // viewInsets.bottom enthält die Tastatur-Höhe.
+    // Wird als Padding unten hinzugefügt damit der Inhalt beim Tippen nicht
+    // hinter der Tastatur verschwindet.
+    final keyboardInset = MediaQuery.of(context).viewInsets.bottom;
     return Dialog(
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + keyboardInset),
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Neue Sprache',
@@ -183,7 +185,7 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
                      Switch(
                         value: _importCatalog,
                         onChanged: (val) => setState(() => _importCatalog = val),
-                        activeColor: AppColors.primary,
+                        activeThumbColor: AppColors.primary,
                      )
                   ],
                ),

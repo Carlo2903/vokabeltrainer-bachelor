@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../models/conjugation_result.dart';
 import '../../providers/backend_provider.dart';
@@ -754,12 +755,15 @@ class _ConjugationScreenState extends State<ConjugationScreen> {
             border: Border.all(
                 color: AppColors.border.withValues(alpha: 0.4)),
           ),
-          child: SelectableText(
-            result.rawResponse,
-            style: GoogleFonts.sourceCodePro(
-                fontSize: 13,
-                color: AppColors.textSecondary,
-                height: 1.7),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SelectableText(
+              result.rawResponse,
+              style: GoogleFonts.sourceCodePro(
+                  fontSize: 13,
+                  color: AppColors.textSecondary,
+                  height: 1.7),
+            ),
           ),
         ),
       ],
