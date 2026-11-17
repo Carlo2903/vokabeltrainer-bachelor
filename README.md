@@ -1,12 +1,12 @@
 # 🎙️ KI-Vokabeltrainer: Sprachinteraktion & Gamification
 
-> **Intelligenter, sprachbasierter Vokabeltrainer mit lokaler KI-Pipeline (Whisper & Llama 3), reaktivem Gamification-System und Spaced Repetition – entwickelt mit Flutter & FastAPI.**
+> **Intelligenter, sprachbasierter Vokabeltrainer mit lokaler KI-Pipeline (Whisper & Llama 3.2), reaktivem Gamification-System und Spaced Repetition – entwickelt mit Flutter & FastAPI.**
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Whisper](https://img.shields.io/badge/STT-faster--whisper-orange)](https://github.com/SYSTRAN/faster-whisper)
-[![Ollama](https://img.shields.io/badge/LLM-Ollama%20%2F%20Llama%203-black)](https://ollama.ai/)
+[![Ollama](https://img.shields.io/badge/LLM-Ollama%20%2F%20Llama%203.2-black)](https://ollama.ai/)
 [![Firebase](https://img.shields.io/badge/Cloud-Firestore%20%26%20Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
 
 ---
@@ -27,8 +27,8 @@ Dieses Repository entstand im Rahmen meines Informatik-Studiums an der **Fachhoc
 ### 🎙️ 1. KI-Sprachmodus (Active Speech Interaction)
 * **Natürliche Aussprache üben:** Nutzer sprechen Vokabeln frei ein, anstatt nur passiv Karteikarten umzudrehen oder Wörter abzutippen.
 * **faster-whisper STT:** Lokale Transkription mit automatischer oder gezielter Sprachmodellerkennung (ISO-639-1).
-* **Semantische Bewertung (Ollama / Llama 3):** Kein starrer Buchstabenausgleich (String-Vergleich / Levenshtein), sondern echtes semantisches Verständnis – Synonyme (z. B. *„comenzar“* statt *„empezar“*) und andere Zeitformen werden intelligent erkannt und bewertet.
-* **Robuster 2-Phasen Fallback-Parser:** Fängt variierende Modell-Ausgaben deterministisch über reguläre Ausdrücke und Schlagwortanalysen ab, um App-Abstürze vollständig zu verhindern.
+* **Semantische Bewertung (Ollama / Llama 3.2):** Kein starrer Buchstabenausgleich (String-Vergleich / Levenshtein), sondern echtes semantisches Verständnis – Synonyme (z. B. *„comenzar“* statt *„empezar“*) und andere Zeitformen werden intelligent erkannt und bewertet.
+* **Fallback-Auswertung:** Hält sich das Modell nicht an das vorgegebene Antwortformat, wird die Antwort über eine einfache Schlagwortprüfung ausgewertet, statt einen Fehler an die App zurückzugeben.
 
 ### 🎮 2. Pädagogisches Gamification-System
 * **Micro-Paced XP-Engine:** Transparente Punktevergabe mit Dämpfungsfunktion `(correctCount * 10).clamp(5, 500)` abgestimmt auf die Konfigurationsspanne der Lerneinheit (5–50 Wörter), um Binge-Learning zu verhindern.
@@ -84,7 +84,7 @@ lib/
 | **State Management** | **Provider (MVVM)** | Reaktive State-Verteilung & lose Kopplung |
 | **Backend-API** | **Python 3.10+ / FastAPI** | Asynchrone REST-Endpunkte für Audio- & KI-Inferenz |
 | **Spracherkennung** | **faster-whisper (CTranslate2)** | CPU-optimierte STT mit `int8`-Quantisierung |
-| **Sprachmodell** | **Ollama / Llama 3 (8B)** | Semantische Antwortbewertung & Konjugationen |
+| **Sprachmodell** | **Ollama / Llama 3.2 (3B)** | Semantische Antwortbewertung & Konjugationen |
 | **Persistenz & Auth** | **Google Cloud Firestore** | NoSQL-Dokumentendatenbank & Benutzerverwaltung |
 | **Audio I/O** | **record & permission_handler** | AAC-LC / `.m4a` Aufnahme mit nativer Berechtigungsprüfung |
 
@@ -103,7 +103,7 @@ lib/
 ### 1. Voraussetzungen
 * [Flutter SDK](https://docs.flutter.dev/get-started/install) (Version $\ge$ 3.11.0)
 * [Python](https://www.python.org/) (Version $\ge$ 3.10)
-* [Ollama](https://ollama.ai/) mit installiertem Llama-3-Modell (`ollama run llama3`)
+* [Ollama](https://ollama.ai/) mit installiertem Llama-3.2-Modell (`ollama pull llama3.2:3b`)
 * Ein eingerichtetes [Firebase-Projekt](https://firebase.google.com/) (mit Firestore und Auth)
 
 ### 2. Backend starten
@@ -116,10 +116,10 @@ python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # 3. Abhängigkeiten installieren
-pip install fastapi uvicorn faster-whisper requests pydantic
+pip install -r requirements.txt
 
 # 4. FastAPI-Server starten (lauscht auf Port 8000)
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 3. Flutter App konfigurieren & ausführen
