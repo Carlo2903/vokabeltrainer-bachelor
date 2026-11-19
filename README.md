@@ -1,143 +1,138 @@
-# 🎙️ KI-Vokabeltrainer: Sprachinteraktion & Gamification
+# KI-Vokabeltrainer: Spracherkennung & Gamification
 
-> **Intelligenter, sprachbasierter Vokabeltrainer mit lokaler KI-Pipeline (Whisper & Llama 3.2), reaktivem Gamification-System und Spaced Repetition – entwickelt mit Flutter & FastAPI.**
+Vokabeltrainer-App mit Flutter, bei der Vokabeln auch per Sprache abgefragt werden können. Spracherkennung (faster-whisper) und Antwortbewertung (Llama 3.2 über Ollama) laufen lokal auf einem eigenen FastAPI-Server, ohne Cloud-Dienste.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
-[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Whisper](https://img.shields.io/badge/STT-faster--whisper-orange)](https://github.com/SYSTRAN/faster-whisper)
-[![Ollama](https://img.shields.io/badge/LLM-Ollama%20%2F%20Llama%203.2-black)](https://ollama.ai/)
-[![Firebase](https://img.shields.io/badge/Cloud-Firestore%20%26%20Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
+## Entstehung: zwei Phasen
 
----
+| | Phase 1: Teamprojekt | Phase 2: Bachelorarbeit |
+| --- | --- | --- |
+| Rahmen | Modul *Mobile Applikationen*, FH Südwestfalen | Bachelorarbeit, FH Südwestfalen (2026) |
+| Team | 3 Personen | Einzelarbeit (Carlo Iuliano) |
+| Inhalt | Karteikarten-Vokabeltrainer mit Flutter und Firebase | Erweiterung um Sprachmodus, KI-Auswertung, Backend und Gamification |
 
-## 📌 Über das Projekt & Entstehungsgeschichte
+**Phase 1 (Team):** Firebase-Login, Vokabelstapel in Cloud Firestore, Lernmodus mit Stapelsystem nach dem Leitner-Prinzip (`training` → `review` → `mastered`, Rückstufung bei Fehlern), Push-Benachrichtigungen.
+Mein Anteil in Phase 1: Kamera-Import mit Texterkennung (Google ML Kit OCR), On-Device-Übersetzung (ML Kit Translation) und die ersten Gamification-Funktionen (XP, Streaks, Liga-Bestenliste).
 
-Dieses Repository entstand im Rahmen meines Informatik-Studiums an der **Fachhochschule Südwestfalen** und gliedert sich in zwei Entwicklungsphasen:
+**Phase 2 (Bachelorarbeit, „KI-Vokabeltrainer mit Flutter: Integration von Spracherkennung und Gamification“):** alles in den folgenden Abschnitten, sofern nicht anders gekennzeichnet. Dieses Repository enthält nur meine Commits; die Basis aus Phase 1 ist im ersten Commit enthalten.
 
-1. **Phase 1 – Basis-App (Teamprojekt):**  
-   Im Modul *Mobile Applikationen* wurde im **3er-Team** ein grundlegender Prototyp für einen Karteikarten-Vokabeltrainer mit Flutter und Google Firebase entwickelt.
-2. **Phase 2 – KI-Transformation & Gamification (Bachelorarbeit von Carlo Iuliano):**  
-   In meiner anschließenden Bachelorarbeit (*„KI-Vokabeltrainer mit Flutter: Integration von Spracherkennung und Gamification“*) habe ich die Anwendung eigenständig zu einer KI-gestützten Sprachlern-Plattform erweitert. Hierbei wurden die gesamte Speech-to-Text-Pipeline, die semantische Auswertung via lokalem LLM, das serverseitige FastAPI-Backend, das reaktive Gamification-Ökosystem und eine qualitative Usability-Studie ($N=6$) konzipiert und implementiert.
+## Funktionen (Phase 2)
 
----
+### Sprachmodus
+- Die App zeigt eine Vokabel, man spricht die Übersetzung ein
+- Die Aufnahme (`.m4a`, AAC-LC) wird per HTTP-Multipart an den lokalen Server geschickt und dort mit faster-whisper transkribiert
+- Llama 3.2 (3B) prüft, ob die Antwort inhaltlich passt. Dadurch können auch Synonyme oder abweichende Schreibweisen als richtig gewertet werden, was ein reiner Textvergleich nicht leistet
+- Das Modell soll in einem festen Format antworten (`KORREKT: ja/nein`, `FEEDBACK: …`). Hält es sich nicht daran, wertet der Server die Antwort über eine einfache Schlagwortprüfung aus, statt einen Fehler zurückzugeben
 
-## ✨ Hauptfunktionen
+### Konjugationsmodus
+- Ein Verb und eine Sprache eingeben, das LLM liefert eine Konjugationstabelle mit Beispielsätzen
+- Wenn die Ausgabe nicht als Tabelle verarbeitet werden kann, zeigt die App den Freitext mit einem Hinweis an
 
-### 🎙️ 1. KI-Sprachmodus (Active Speech Interaction)
-* **Natürliche Aussprache üben:** Nutzer sprechen Vokabeln frei ein, anstatt nur passiv Karteikarten umzudrehen oder Wörter abzutippen.
-* **faster-whisper STT:** Lokale Transkription mit automatischer oder gezielter Sprachmodellerkennung (ISO-639-1).
-* **Semantische Bewertung (Ollama / Llama 3.2):** Kein starrer Buchstabenausgleich (String-Vergleich / Levenshtein), sondern echtes semantisches Verständnis – Synonyme (z. B. *„comenzar“* statt *„empezar“*) und andere Zeitformen werden intelligent erkannt und bewertet.
-* **Fallback-Auswertung:** Hält sich das Modell nicht an das vorgegebene Antwortformat, wird die Antwort über eine einfache Schlagwortprüfung ausgewertet, statt einen Fehler an die App zurückzugeben.
+### Gamification
+- XP pro abgeschlossener Lerneinheit: `(richtige Antworten * 10).clamp(5, 500)`
+- 5 Ligen (Bronze, Silber, Gold, Platin, Diamant), die direkt aus den Gesamt-XP berechnet werden, ohne eigenen gespeicherten Liga-Status
+- Tägliche Lernserie (Streak)
+- 8 Badges im Katalog, davon 6 mit hinterlegter Freischaltbedingung (Level, Streak, gelernte und gemeisterte Wörter, Lerneinheiten, Sprachen)
 
-### 🎮 2. Pädagogisches Gamification-System
-* **Micro-Paced XP-Engine:** Transparente Punktevergabe mit Dämpfungsfunktion `(correctCount * 10).clamp(5, 500)` abgestimmt auf die Konfigurationsspanne der Lerneinheit (5–50 Wörter), um Binge-Learning zu verhindern.
-* **5-Stufen Ligasystem (Single Source of Truth):** Ligen (Bronze, Silber, Gold, Platin, Diamant) werden deterministisch aus den Gesamt-XP berechnet – keine Dateninkonsistenzen bei Netzwerkabbrüchen.
-* **Streaks & Badges:** Tägliche Lernserien und freischaltbare Meilensteine mit reaktiven UI-Benachrichtigungen.
-* **Spaced Repetition (Leitner-Prinzip):** 3-Stufen-Wiederholungssystem (`training` $\rightarrow$ `review` $\rightarrow$ `mastered`) mit automatischer Rückstufung bei Fehlern in `TrainingService`.
+### Usability-Studie
+Qualitative Studie mit 6 Testpersonen: Ich habe die Personen bei der Nutzung der App beobachtet und sie danach befragt.
 
-### 🔒 3. Datenschutz & Datensparsamkeit (DSGVO)
-* **Zero-Cloud-Audio:** Sprachaufnahmen werden als komprimiertes `.m4a` (AAC-LC) flüchtig im lokalen App-Cache gehalten und per HTTP-Multipart direkt an den lokalen Inferenz-Server gestreamt.
-* **Keine Speicherung biometrischer Daten:** Audioaufnahmen werden nach der Transkription verworfen und niemals in Cloud-Speichern (wie Firebase Storage) persistent hinterlegt.
+## Lokale Verarbeitung
+- Audioaufnahmen werden nur an den lokalen Server geschickt, dort als temporäre Datei transkribiert und danach gelöscht
+- Spracherkennung und Sprachmodell laufen ohne Cloud-Dienste
+- Firebase wird nur für Login und Vokabeldaten genutzt, nicht für Audio
 
----
-
-## 🏛️ Systemarchitektur
-
-Die Anwendung folgt einer **3-Knoten-Architektur (Client – Server – Cloud)** und trennt UI, Business-Logik und Datenhaltung strikt nach dem **MVVM-Pattern (Model-View-ViewModel)**:
+## Architektur
 
 ```text
 ┌─────────────────────────────────┐
-│     Smartphone (Flutter UI)     │
-│   MVVM • Provider • GoRouter    │
+│     Smartphone (Flutter-App)    │
+│   MVVM · Provider · GoRouter    │
 └───────┬─────────────────┬───────┘
         │                 │
-  HTTP / REST        Firebase SDK
-  (Multipart)             │
+   HTTP (REST,       Firebase SDK
+   Multipart)             │
         ▼                 ▼
 ┌─────────────────┐ ┌───────────────────────────┐
-│ Local KI-Server │ │       Google Cloud        │
-│ Python/FastAPI  │ │  Cloud Firestore (NoSQL)  │
-│  Whisper (STT)  │ │  Firebase Authentication  │
-│  Ollama (LLM)   │ └───────────────────────────┘
+│ Lokaler Server  │ │          Firebase         │
+│ Python/FastAPI  │ │  Cloud Firestore          │
+│ faster-whisper  │ │  Firebase Authentication  │
+│ Ollama (LLM)    │ └───────────────────────────┘
 └─────────────────┘
 ```
+
+### Backend-Endpunkte (`backend/app`)
+
+| Endpunkt | Zweck |
+| --- | --- |
+| `POST /api/transcribe` | Audio-Upload (Multipart), Transkription mit faster-whisper (Modell `small`, CPU, `int8`) |
+| `POST /api/chat` | Anfrage an das LLM, Modus `evaluation` (Antwort bewerten) oder `conjugation` (Verb konjugieren) |
+| `GET /health` | Erreichbarkeit prüfen |
+
+Anfragen werden mit Pydantic validiert; ungültige Daten lehnt FastAPI mit HTTP 422 ab.
 
 ### Projektstruktur (`lib/`)
 
 ```text
 lib/
-├── config/       # Zentrale Konfiguration (AppConfig, Endpunkte, Timeouts)
-├── models/       # Unveränderliche Datenmodelle (LeagueModel, BadgeModel, Vocabulary)
-├── providers/    # State-Management & Business-Logik (GamificationProvider, SessionProvider)
-├── services/     # Schnittstellen (BackendService, FirestoreService, TrainingService)
-└── ui/           # Screens, Dialoge & Widgets (VoiceLearningScreen, DashboardScreen, MicButton)
+├── config/      # Backend-URL und Timeouts (AppConfig)
+├── models/      # Datenmodelle (Vocabulary, LeagueModel, BadgeModel, …)
+├── providers/   # State-Management (GamificationProvider, SessionProvider, BackendProvider, …)
+├── services/    # Backend, Firestore, OCR, Übersetzung, Training
+└── ui/          # Screens und Widgets
 ```
 
----
+## Tech-Stack
 
-## 🛠️ Tech Stack
+| Bereich | Technologie |
+| --- | --- |
+| App | Flutter, Dart, Provider, GoRouter |
+| Backend | Python, FastAPI, Pydantic |
+| Spracherkennung | faster-whisper (CTranslate2) |
+| Sprachmodell | Llama 3.2 (3B) über Ollama |
+| Daten & Login | Cloud Firestore, Firebase Authentication |
+| Phase 1 | Google ML Kit (Texterkennung, Übersetzung) |
 
-| Bereich | Technologie | Verwendung / Zweck |
-| :--- | :--- | :--- |
-| **Frontend** | **Flutter 3.x / Dart 3.x** | Cross-Platform Client für Android & iOS |
-| **State Management** | **Provider (MVVM)** | Reaktive State-Verteilung & lose Kopplung |
-| **Backend-API** | **Python 3.10+ / FastAPI** | Asynchrone REST-Endpunkte für Audio- & KI-Inferenz |
-| **Spracherkennung** | **faster-whisper (CTranslate2)** | CPU-optimierte STT mit `int8`-Quantisierung |
-| **Sprachmodell** | **Ollama / Llama 3.2 (3B)** | Semantische Antwortbewertung & Konjugationen |
-| **Persistenz & Auth** | **Google Cloud Firestore** | NoSQL-Dokumentendatenbank & Benutzerverwaltung |
-| **Audio I/O** | **record & permission_handler** | AAC-LC / `.m4a` Aufnahme mit nativer Berechtigungsprüfung |
+## Tests
+- Unit-Tests für die Ligagrenzen in `test/league_model_test.dart` (z. B. 999 XP → Bronze, 1000 XP → Silber)
+- Timeouts für Backend-Anfragen (60 s Transkription, 30 s Chat); ist der Server nicht erreichbar, wird eine `BackendUnreachableException` geworfen und in der App angezeigt
 
----
+## Bekannte Grenzen
 
-## 🧪 Qualitätssicherung & Tests
+Die Screenshots stammen aus Tests auf einem echten Gerät und zeigen typische Fehlerfälle:
 
-* **Unit-Tests (Dart Test):** Automatisierte Tests für Kern-Modelle und Grenzwerte (z. B. Randwertanalyse der Ligengrenzen bei exakt 1.000 XP in `test/league_model_test.dart`).
-* **Pydantic API-Validierung:** Strikte Typen- und Schemavalidierung in FastAPI. Fehlerhafte Anfragen werden mit `HTTP 422 Unprocessable Entity` abgewiesen, bevor KI-Pipelines ausgeführt werden.
-* **Fehlertoleranz & Timeouts:** Strikte Asynchronität (`async/await`) verhindert UI-Freezes. Timeouts (60s Whisper, 30s Chat) fangen Verbindungsabbrüche über getypte `BackendUnreachableException` sauber ab.
+| Transkription | Bewertung | Konjugation |
+| --- | --- | --- |
+| <img src="docs/screenshots/sprachmodus_transkription.png" width="230"> | <img src="docs/screenshots/sprachmodus_bewertung.png" width="230"> | <img src="docs/screenshots/konjugation.png" width="230"> |
+| Whisper hat die Sprache falsch erkannt und arabische Schrift ausgegeben. | Antwort und Lösung sind identisch, das Modell hat trotzdem „falsch“ bewertet. | Das Modell hat keine verwertbare Tabelle geliefert, die App zeigt den Freitext. |
 
----
+- Ein 3B-Modell bewertet nicht zuverlässig. Für den Praxiseinsatz bräuchte es ein größeres Modell oder einen vorgeschalteten exakten Vergleich.
+- Ein Fehler im Backend (der Parameter `Form` wurde aus `tkinter` statt aus FastAPI importiert) hat dazu geführt, dass die Sprachangabe nicht beim Server ankam und Whisper die Sprache selbst erkennen musste. Behoben im Commit `f3fa2e7`.
+- Im Stapelsystem aus Phase 1 (`training_service.dart`) werden Wiederholungswörter zwar zuerst eingeordnet, die Liste wird danach aber gemischt. Die beabsichtigte Priorisierung wirkt dadurch nicht.
 
-## 🚀 Installation & Lokales Setup
+## Lokales Setup
 
-### 1. Voraussetzungen
-* [Flutter SDK](https://docs.flutter.dev/get-started/install) (Version $\ge$ 3.11.0)
-* [Python](https://www.python.org/) (Version $\ge$ 3.10)
-* [Ollama](https://ollama.ai/) mit installiertem Llama-3.2-Modell (`ollama pull llama3.2:3b`)
-* Ein eingerichtetes [Firebase-Projekt](https://firebase.google.com/) (mit Firestore und Auth)
+**Voraussetzungen:** Flutter SDK (≥ 3.11), Python ≥ 3.10, [Ollama](https://ollama.com/) mit `ollama pull llama3.2:3b`, eigenes Firebase-Projekt (Firestore und Authentication)
 
-### 2. Backend starten
+### Backend starten
 ```bash
-# 1. In das Backend-Verzeichnis wechseln
 cd backend
-
-# 2. Virtuelle Umgebung erstellen und aktivieren
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 3. Abhängigkeiten installieren
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# 4. FastAPI-Server starten (lauscht auf Port 8000)
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 3. Flutter App konfigurieren & ausführen
-1. In `lib/config/app_config.dart` die Backend-URL auf deine Rechner-IP anpassen:
-   * **Physisches Smartphone:** `http://<DEINE-LOKALE-PC-IP>:8000`
-   * **Android-Emulator:** `http://10.0.2.2:8000`
-2. Abhängigkeiten laden und App starten:
-```bash
-flutter pub get
-flutter run
-```
+### App starten
+1. In `lib/config/app_config.dart` die Backend-URL eintragen
+   - Smartphone im selben WLAN: `http://<IP-des-PCs>:8000`
+   - Android-Emulator: `http://10.0.2.2:8000`
+2. Abhängigkeiten laden und starten
+   ```bash
+   flutter pub get
+   flutter run
+   ```
 
----
+## Autor
 
-## 👤 Autor
-
-**Carlo Iuliano**  
-*Bachelor of Science in Informatik*  
-Fachhochschule Südwestfalen  
-Projekt: Bachelorarbeit (2026)  
-Referent: Prof. Dr. Doga Arinir | Korreferent: Prof. Dr. rer. nat. Uwe Klug
+**Carlo Iuliano**, B.Sc. Informatik, Fachhochschule Südwestfalen
+Bachelorarbeit (2026), Referent: Prof. Dr. Doga Arinir, Korreferent: Prof. Dr. rer. nat. Uwe Klug
